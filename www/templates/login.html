@@ -1,0 +1,23 @@
+<ion-view view-title="Login" name="login-view">
+    <ion-content class="padding">
+        <form ng-submit="login(input)" name="loginForm">
+            <div class="list list-inset">
+                
+                <label class="item item-input" ng-class="
+                    { 'has-error' : loginForm.username.$invalid && !loginForm.username.$pristine }
+                ">
+                    <input type="text" placeholder="Username" name="username" ng-model="input.username" required>
+                </label>
+                <p ng-show="loginForm.username.$invalid && !loginForm.username.$pristine" class="assertive">Username tidak boleh kosong</p>
+                
+                <label class="item item-input" ng-class="
+                    { 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine }
+                ">
+                  <input type="password" placeholder="Password" name="password" ng-model="input.password" required>
+                </label>
+                <p ng-show="loginForm.password.$invalid && !loginForm.password.$pristine" class="assertive">Password tidak boleh kosong</p>
+            </div>
+            <button type="submit" class="button button-block button-calm" ng-disabled="loginForm.$invalid">Login</button>
+        </form>
+    </ion-content>
+</ion-view>
