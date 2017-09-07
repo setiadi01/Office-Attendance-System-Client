@@ -1,5 +1,4 @@
-angular.module('absensiApp', ['ionic', 'satellizer'])
-
+angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'])
 .run(function($ionicPlatform, $rootScope, $window, $location) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -19,11 +18,29 @@ angular.module('absensiApp', ['ionic', 'satellizer'])
         $location.path('/');
     }
 
+    $rootScope.$on('$stateChangeSuccess',
+        function(event, toState, toParams, fromState, fromParams) {
+
+            if(toState.cssFileName) {
+                $rootScope.customCss = 'css/'+toState.cssFileName;
+            } else {
+                $rootScope.customCss = '';
+            }
+
+            if(toState.tab) {
+                $rootScope.tab = toState.tab;
+            } else {
+                $rootScope.tab = false;
+            }
+    });
+
 })
 
-.config(function($stateProvider, $urlRouterProvider, $authProvider, $httpProvider) {
-    
+.config(function($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $ionicConfigProvider) {
+
     $authProvider.loginUrl = 'http://localhost:8000/api/login';
+
+    $ionicConfigProvider.tabs.position('bottom');
 
     $httpProvider.interceptors.push(function($q) {
         return {
@@ -41,7 +58,24 @@ angular.module('absensiApp', ['ionic', 'satellizer'])
     .state('login', {
         url: '/login',
         templateUrl: 'templates/login.html',
-        controller: 'AuthCtrl'
+        controller: 'AuthUserCtrl',
+        cssFileName : 'login.css'
+    })
+
+    $stateProvider
+    .state('login-recent', {
+        url: '/login-recent',
+        templateUrl: 'templates/login-recent-account.html',
+        controller: 'AuthUserCtrl',
+        cssFileName : 'login.css'
+    })
+
+    $stateProvider
+    .state('login-password', {
+        url: '/login-password',
+        templateUrl: 'templates/login-password.html',
+        controller: 'AuthPassCtrl',
+        cssFileName : 'login.css'
     })
 
     .state('app', {
@@ -52,10 +86,22 @@ angular.module('absensiApp', ['ionic', 'satellizer'])
 
     .state('app.home', {
         url: '/home',
+        tab: true,
         views: {
-            'menuContent': {
+            'home-tab': {
                 templateUrl: 'templates/home.html',
                 controller: 'HomeCtrl'
+            }
+        }
+    })
+
+    .state('app.recent', {
+        url: '/recent',
+        tab: true,
+        views: {
+            'recent-tab': {
+                templateUrl: 'templates/recent.html',
+                controller: 'RecentCtrl'
             }
         }
     })
