@@ -1,1 +1,45 @@
-/* Empty. Add your own CSS if you like */
+/**
+ * ABSEN, September 2017
+ * Common css
+ */
+
+body {
+    font-family: "Open Sans";
+    color: #ffffff;
+}
+
+.color-white, input[type="text"], input[type="text"]::placeholder,
+    input[type="password"], input[type="password"]::placeholder,
+    .menu, .menu .bar.bar-stable .title {
+    color: #ffffff;
+}
+
+.home-view {
+    background: #2c3b51;
+}
+
+div.person {
+    background-repeat: no-repeat;
+    background-size: 100% 100% !important;
+    border-radius: 50%;
+    border: 5px solid #ffffff;
+}
+
+div.person.recent {
+    float: left;
+    width: 100px;
+    height: 100px;
+}
+
+div.person.no-img {
+    background: url(/img/person.png);
+    border: none;
+}
+
+.menu {
+    background: #009496;
+}
+
+.menu, .menu .bar.bar-stable {
+    background: #009496;
+}
