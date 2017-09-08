@@ -4,13 +4,13 @@
  */
 
 body {
-    font-family: "Open Sans";
+    font-family: 'Open Sans', sans-serif;
     color: #ffffff;
 }
 
 .color-white, input[type="text"], input[type="text"]::placeholder,
     input[type="password"], input[type="password"]::placeholder,
-    .menu, .menu .bar.bar-stable .title {
+    .menu, .menu .bar.bar-stable .title, ion-side-menu .item  {
     color: #ffffff;
 }
 
@@ -42,4 +42,13 @@ div.person.no-img {
 
 .menu, .menu .bar.bar-stable {
     background: #009496;
+}
+
+menu-open .menu-content .pane, .menu-open .menu-content .scroll-content,
+.menu-open .menu-content .scroll-content .scroll{
+    pointer-events: auto !important;
+}
+
+.hide {
+    opacity: 0;
 }

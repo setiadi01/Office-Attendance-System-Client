@@ -1,5 +1,5 @@
 <ion-side-menus enable-menu-with-back-views="false">
-  <ion-side-menu-content>
+  <ion-side-menu-content ng-hide="!tab">
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button>
       </ion-nav-back-button>
@@ -22,20 +22,50 @@
     </ion-tabs>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left" width="350">
-    <ion-header-bar class="bar-stable">
-      <h1 class="title">Left</h1>
+  <ion-side-menu-content ng-hide="tab">
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="page"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left" width="320">
+    <ion-header-bar class="hide bar-stable">
     </ion-header-bar>
-    <ion-content>
+    <ion-content class="hide-header">
+
+      <div class="header-menu">
+        <div class="person side-menu" style="background: url('https://scontent-sin6-2.xx.fbcdn.net/v/t1.0-9/20031813_1115122758619697_6580804958451995592_n.jpg?oh=961b5008c1bab6b6341fa7e2ea40f5cf&oe=5A4DDA51')"></div>
+        <h1 class="color-white">Oki Karso Aji</h1>
+        <span>Developer</span>
+      </div>
+
       <ion-list>
-        <ion-item menu-close href="#/app/home">
-          Home
+        <ion-item menu-close href="#/app/home" class="active">
+          <i class="icon ion-home"></i> Home
         </ion-item>
-        <ion-item menu-close href="#/app/page">
-          Page
+        <ion-item menu-close href="#/app/notifications">
+          <i class="icon ion-android-notifications"></i> Notifications
         </ion-item>
-        <ion-item ng-click="logout()">
-          Logout
+        <ion-item menu-close href="#/app/edit-profile">
+          <i class="icon ion-person"></i> Edit Profile
+        </ion-item>
+        <ion-item menu-close href="#/app/change-password">
+          <i class="icon ion-android-unlock"></i> Change Password
+        </ion-item>
+        <ion-item menu-close href="#/app/report">
+          <i class="icon ion-ios-list"></i> Report
+        </ion-item>
+        <ion-item class="item item-complex" ng-click="logout()">
+          <a class="item-content">
+            <i class="icon ion-power"></i> Logout
+          </a>
         </ion-item>
       </ion-list>
     </ion-content>

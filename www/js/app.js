@@ -32,6 +32,12 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             } else {
                 $rootScope.tab = false;
             }
+
+            console.log(toState);
+            console.log(fromState);
+            console.log(event);
+            console.log(fromParams);
+            console.log(toParams);
     });
 
 })
@@ -62,7 +68,6 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         cssFileName : 'login.css'
     })
 
-    $stateProvider
     .state('login-recent', {
         url: '/login-recent',
         templateUrl: 'templates/login-recent-account.html',
@@ -70,7 +75,6 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         cssFileName : 'login.css'
     })
 
-    $stateProvider
     .state('login-password', {
         url: '/login-password',
         templateUrl: 'templates/login-password.html',
@@ -109,7 +113,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     .state('app.page', {
         url: '/page',
         views: {
-            'menuContent': {
+            'page': {
                 templateUrl: 'templates/page.html',
                 controller: 'PageCtrl'
             }
