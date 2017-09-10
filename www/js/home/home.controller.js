@@ -15,7 +15,7 @@ angular.module('absensiApp')
 
 })
 
-.controller('RecentCtrl', function($scope, RecentService) {
+.controller('RecentCtrl', function($scope, RecentService, $ionicScrollDelegate) {
     console.log('Home');
 
     var ui = $scope;
@@ -27,5 +27,9 @@ angular.module('absensiApp')
         }).catch(function(response){
             console.log(response);
         });
+
+    $scope.scrollSmallToTop = function() {
+        $ionicScrollDelegate.$getByHandle('top-content').scrollTop(true);
+    };
 
 })

@@ -5,21 +5,34 @@
       </ion-nav-back-button>
 
       <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-android-notifications" menu-toggle="left">
         </button>
       </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-tabs class="tabs-icon-top tabs-positive">
+    <div class="bar bar-header bar-positive">
+      <h1 class="title">ABSEN</h1>
+      <div class="group-date">
+        <p class="date">{{clock | date:'EEEE, dd MMMM yyyy'}}</p>
+        <p class="clock">{{clock | date:'HH:mm:ss'}}</p>
+      </div>
+    </div>
+    <ion-content>
+      <ion-tabs class="tabs-icon-top tabs-positive">
 
-      <ion-tab title="Home" icon="ion-home" href="#/app/home">
-        <ion-nav-view name="home-tab"></ion-nav-view>
-      </ion-tab>
+        <ion-tab title="Home" icon="ion-home" href="#/app/home">
+          <ion-nav-view name="home-tab"></ion-nav-view>
+        </ion-tab>
 
-      <ion-tab title="Recent" icon="ion-clock" href="#/app/recent">
-        <ion-nav-view name="recent-tab"></ion-nav-view>
-      </ion-tab>
+        <ion-tab title="Recent" icon="ion-ios-refresh" href="#/app/recent">
+          <ion-nav-view name="recent-tab"></ion-nav-view>
+        </ion-tab>
 
-    </ion-tabs>
+      </ion-tabs>
+    </ion-content>
   </ion-side-menu-content>
 
   <ion-side-menu-content ng-hide="tab">
@@ -35,7 +48,7 @@
     <ion-nav-view name="page"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left" width="320">
+  <ion-side-menu side="left" width="310">
     <ion-header-bar class="hide bar-stable">
     </ion-header-bar>
     <ion-content class="hide-header">

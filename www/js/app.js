@@ -33,11 +33,18 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
                 $rootScope.tab = false;
             }
 
-            console.log(toState);
-            console.log(fromState);
-            console.log(event);
-            console.log(fromParams);
-            console.log(toParams);
+            $rootScope.tick = function() {
+                $rootScope.clock = Date.now() // get the current time
+                // $timeout($rootScope.tick, 1000); // reset the timer
+            }
+
+            var updateClock = function () {
+                $rootScope.clock = new Date();
+            };
+
+            setInterval(function () {
+                $rootScope.$apply(updateClock);
+            }, 1000);
     });
 
 })
@@ -91,6 +98,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     .state('app.home', {
         url: '/home',
         tab: true,
+        cssFileName : 'home-recent.css',
         views: {
             'home-tab': {
                 templateUrl: 'templates/home.html',
@@ -102,6 +110,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     .state('app.recent', {
         url: '/recent',
         tab: true,
+        cssFileName : 'home-recent.css',
         views: {
             'recent-tab': {
                 templateUrl: 'templates/recent.html',

@@ -6,21 +6,21 @@ div.person.side-menu {
     margin: auto;
     margin-top: 40px;
     margin-bottom: 15px;
-    width: 185px;
-    height: 185px;
+    width: 150px;
+    height: 150px;
 }
 
 .header-menu h1 {
     margin: 0;
     text-align: center;
-    font-size: 30px;
+    font-size: 25px;
     font-weight: bold;
 }
 
 .header-menu span {
     text-align: center;
     display: block;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: bold;
 }
 
@@ -32,7 +32,7 @@ ion-side-menu .item, ion-side-menu .item a.item-content{
     background: none;
     border: none;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 17px;
 }
 
 ion-side-menu .item a.item-content{
@@ -49,10 +49,13 @@ ion-side-menu .item.active a.item-content, ion-side-menu .item  a.item-content.a
 }
 
 ion-side-menu .item a.item-content i {
-    font-size: 25px;
+    font-size: 20px;
     width: 30px;
     display: block;
     float: left;
-    margin-top: -5px;
+    margin-top: 0px;
 }
 
+.menu .menu-open .menu-content .scroll-content .scroll {
+    height: calc(100% - 44px);
+}

@@ -41,7 +41,11 @@ div.person.no-img {
 }
 
 .menu, .menu .bar.bar-stable {
-    background: #009496;
+    background: #009595;
+}
+
+.view-container.tab-content .pane {
+    background: #d3d3d3;
 }
 
 menu-open .menu-content .pane, .menu-open .menu-content .scroll-content,
@@ -52,3 +56,27 @@ menu-open .menu-content .pane, .menu-open .menu-content .scroll-content,
 .hide {
     opacity: 0;
 }
+
+.bar-stable .button.button-clear {
+    font-size: 35px;
+    color: #ffffff;
+}
+
+.shadow {
+    -webkit-box-shadow: 10px 10px 50px 0px rgba(0,0,0,0.41);
+    -moz-box-shadow: 10px 10px 50px 0px rgba(0,0,0,0.41);
+    box-shadow: 10px 10px 50px 0px rgba(0,0,0,0.41);
+}
+
+button.back-to-top {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 70px;
+    right: 10px;
+}
+
+/** HEADER
+ */
+
