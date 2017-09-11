@@ -31,7 +31,7 @@ div.person.login {
     margin: 3px -15% 0 8%;
 }
 
-.login-username button, .login-password button {
+.login-username a, .login-password button {
     margin: auto;
     margin-top: 30px;
     border: 0;

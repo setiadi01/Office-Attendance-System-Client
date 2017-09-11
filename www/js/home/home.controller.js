@@ -1,7 +1,6 @@
 angular.module('absensiApp')
 
 .controller('HomeCtrl', function($scope, HomeService) {
-    console.log('Home');
 
     var ui = $scope;
 

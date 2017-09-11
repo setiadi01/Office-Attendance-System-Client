@@ -1,5 +1,5 @@
 angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'])
-.run(function($ionicPlatform, $rootScope, $window, $location) {
+.run(function($ionicPlatform, $rootScope, $window, $location, $http, constant, $ionicLoading) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -12,6 +12,27 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             StatusBar.styleDefault();
         }
     });
+
+    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
+
+    if ($rootScope.currentUser.profile_picture != null) {
+        $http.get(constant.API_URL+'images/'+$rootScope.currentUser.profile_picture, {
+            responseType: 'arraybuffer'
+        })
+        .then(function(response){
+            $ionicLoading.hide();
+            var imageBlob = new Blob([response.data], { type: response.headers('Content-Type') });
+            $rootScope.profilePicture = (window.URL || window.webkitURL).createObjectURL(imageBlob);
+
+        }).catch(function(response){
+            $ionicLoading.hide();
+            $ionicPopup.alert({
+                title: 'Error',
+                template: 'Maaf, server sedang mangalami gangguan'
+            });
+        });
+    }
+   
 
     $rootScope.logout = function(){
         $window.localStorage.clear();
@@ -33,15 +54,12 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
                 $rootScope.tab = false;
             }
 
-            console.log(toState);
-            console.log(fromState);
-            console.log(event);
-            console.log(fromParams);
-            console.log(toParams);
     });
 
 })
-
+.constant('constant', {
+    API_URL : 'http://localhost:8000/api/'
+})
 .config(function($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $ionicConfigProvider) {
 
     $authProvider.loginUrl = 'http://localhost:8000/api/login';
@@ -76,7 +94,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     })
 
     .state('login-password', {
-        url: '/login-password',
+        url: '/login-password/:username',
         templateUrl: 'templates/login-password.html',
         controller: 'AuthPassCtrl',
         cssFileName : 'login.css'

@@ -10,7 +10,8 @@
                         <input type="text" placeholder="username" name="username" ng-model="username"
                                required>
                     </div>
-                    <button type="submit" class="next-button color-white" ng-disabled="loginForm.$invalid">Next</button>
+                    <!-- <button type="submit" class="next-button color-white" ng-disabled="loginForm.$invalid">Next</button> -->
+                    <a href="#/login-password/{{username}}" class="button button-positive next-button color-white" ng-disabled="loginForm.$invalid">Next</a>
                 </form>
             </div>
         </div>
