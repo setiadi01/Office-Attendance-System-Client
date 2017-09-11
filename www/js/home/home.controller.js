@@ -32,4 +32,8 @@ angular.module('absensiApp')
         $ionicScrollDelegate.$getByHandle('top-content').scrollTop(true);
     };
 
+    $scope.gotScrolled = function(asas) {
+        console.log($ionicScrollDelegate.$getByHandle('top-content').getScrollPosition().top);
+    };
+
 })
