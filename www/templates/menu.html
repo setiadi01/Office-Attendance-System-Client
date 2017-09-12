@@ -3,17 +3,9 @@
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button>
       </ion-nav-back-button>
-
-      <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left">
-        </button>
-      </ion-nav-buttons>
-      <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-android-notifications" menu-toggle="left">
-        </button>
-      </ion-nav-buttons>
     </ion-nav-bar>
     <div class="bar bar-header bar-positive">
+      <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
       <h1 class="title">ABSEN</h1>
       <div class="group-date">
         <p class="date">{{clock | date:'EEEE, dd MMMM yyyy'}}</p>
@@ -60,19 +52,19 @@
       </div>
 
       <ion-list>
-        <ion-item menu-close href="#/app/home" class="active">
+        <ion-item menu-close href="#/app/home" ng-class="page=='home'?'active':''">
           <i class="icon ion-home"></i> Home
         </ion-item>
-        <ion-item menu-close href="#/app/notifications">
+        <ion-item menu-close href="#/app/notifications" ng-class="page=='notifications'?'active':''">
           <i class="icon ion-android-notifications"></i> Notifications
         </ion-item>
-        <ion-item menu-close href="#/app/edit-profile">
+        <ion-item menu-close href="#/app/edit-profile" ng-class="page=='edit-profile'?'active':''">
           <i class="icon ion-person"></i> Edit Profile
         </ion-item>
-        <ion-item menu-close href="#/app/change-password">
+        <ion-item menu-close href="#/app/change-password" ng-class="page=='change-password'?'active':''">
           <i class="icon ion-android-unlock"></i> Change Password
         </ion-item>
-        <ion-item menu-close href="#/app/report">
+        <ion-item menu-close href="#/app/report" ng-class="page=='report'?'active':''">
           <i class="icon ion-ios-list"></i> Report
         </ion-item>
         <ion-item class="item item-complex" ng-click="logout()">

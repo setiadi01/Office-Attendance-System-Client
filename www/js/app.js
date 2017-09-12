@@ -33,6 +33,12 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
                 $rootScope.tab = false;
             }
 
+            if(toState.url) {
+                $rootScope.page = toState.url.substr(1,toState.url.lenght);
+            } else {
+                $rootScope.page = '';
+            }
+
             $rootScope.tick = function() {
                 $rootScope.clock = Date.now() // get the current time
                 // $timeout($rootScope.tick, 1000); // reset the timer
@@ -125,6 +131,16 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             'page': {
                 templateUrl: 'templates/page.html',
                 controller: 'PageCtrl'
+            }
+        }
+    })
+
+    .state('app.notifications', {
+        url: '/notifications',
+        views: {
+            'page': {
+                templateUrl: 'templates/notifications.html',
+                controller: 'NotificationsCtrl'
             }
         }
     })

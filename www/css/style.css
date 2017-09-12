@@ -75,11 +75,12 @@ button.back-to-top {
     height: 70px;
     border-radius: 50%;
     position: absolute;
-    bottom: 80px;
     right: 20px;
     -webkit-box-shadow: 9px 9px 9px -1px rgba(0,0,0,0.51);
     -moz-box-shadow: 9px 9px 9px -1px rgba(0,0,0,0.51);
     box-shadow: 9px 9px 9px -1px rgba(0,0,0,0.51);
+    -webkit-transition: bottom ease .5s; /* Safari */
+    transition: bottom ease .5s;
 }
 
 button.back-to-top.activated {
@@ -91,6 +92,16 @@ button.back-to-top.activated {
 button.back-to-top label {
     font-size: 30px;
     color: #fff;
+}
+
+button.back-to-top.show {
+    bottom: 80px;
+}
+
+button.back-to-top.hide {
+    opacity: 1;
+    display: block;
+    bottom: -20px;
 }
 
 /** HEADER
