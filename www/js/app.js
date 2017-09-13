@@ -15,7 +15,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
     $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
 
-    if ($rootScope.currentUser.profile_picture != null) {
+    if ($rootScope.currentUser !=null && $rootScope.currentUser.profile_picture != null) {
         $http.get(constant.API_URL+'images/'+$rootScope.currentUser.profile_picture, {
             responseType: 'arraybuffer'
         })
@@ -58,11 +58,11 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://localhost:8000/api/'
+    API_URL : 'http://192.168.0.168:8125/api/'
 })
 .config(function($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $ionicConfigProvider) {
 
-    $authProvider.loginUrl = 'http://localhost:8000/api/login';
+    $authProvider.loginUrl = 'http://192.168.0.168:8125/api/login';
 
     $ionicConfigProvider.tabs.position('bottom');
 

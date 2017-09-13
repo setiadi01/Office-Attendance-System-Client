@@ -3,8 +3,7 @@ angular.module('absensiApp')
 .controller('AuthUserCtrl', function($scope, $rootScope, $auth, $ionicPopup, $state, $http, constant) {
 	var ui = $scope;
     ui.login = function(username){
-		//localStorage.setItem('username', input);
-		$state.go('login-password');
+		$state.go('login-password', {username: username});
 		
     }
 })
@@ -22,22 +21,23 @@ angular.module('absensiApp')
 	ui.ImageUrl = '';
 	var username = $stateParams.username;
 
+	if(!username) {
+        $state.go('login');
+	}
+
 	AuthService.getProfilePicture(username)
 	.then(function(response){
 		$ionicLoading.hide();
 		console.log(response.data);
 		//ui.pic = response.data;
 		if (response.data == null) {
-			ui.ImageUrl = '/img/person.png'
+			ui.ImageUrl = ''
 		}else{
 			loadImage(response.data)
 		}
 	}).catch(function(response){
 		$ionicLoading.hide();
-		$ionicPopup.alert({
-	     	title: 'Error',
-	     	template: 'Maaf, server sedang mangalami gangguan'
-	   	});
+        ui.ImageUrl = ''
 	});
 
 	function loadImage(image){
@@ -51,10 +51,7 @@ angular.module('absensiApp')
 
 		}).catch(function(response){
 			$ionicLoading.hide();
-			$ionicPopup.alert({
-		     	title: 'Error',
-		     	template: 'Maaf, server sedang mangalami gangguan'
-		   	});
+            ui.ImageUrl = ''
 		});
 	}
 
@@ -68,19 +65,30 @@ angular.module('absensiApp')
 					localStorage.setItem('user', JSON.stringify(response.data.user));
 					$state.go('app.home');
 				}else{
-					//$scope.error = true;
-					//$scope.message = "Kombinasi username & password salah";
-					$ionicPopup.alert({
-				     	title: 'Error',
-				     	template: 'Kombinasi username & password salah'
-				   	});
+                    $ionicPopup.confirm({
+                        title: 'Login failed',
+                        template: 'Sory, the username and password you entered do not match. Please try again',
+                        buttons: [{
+                            text: 'Try again',
+                            type: 'with-border-right',
+                        }, {
+                            text: 'Not '+username,
+                            type: 'button-positive',
+                            onTap: function (e) {
+                                $scope.username = '';
+                                $state.go('login');
+                            }
+                        }]
+                    });
 				}
 			})
 			.catch(function(response) {
 				console.log(response);
 				$ionicLoading.hide();
-				$scope.error = true;
-				$scope.message = "Maaf, server sedang mengalami gangguan";
+                $ionicPopup.alert({
+                    title: 'Internal server error',
+                    template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
+                });
 			});
 	}
 })

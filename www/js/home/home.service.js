@@ -5,7 +5,7 @@ angular.module('absensiApp')
 function HomeService($http){
 	return {
 		getLoggedUser : function(){
-			return $http.get('http://localhost:8000/api/get-logged-user')
+			return $http.get('http://192.168.0.168:8125/api/get-logged-user')
 				.then(function(response){
 					return response.data;
 				});
@@ -16,7 +16,7 @@ function HomeService($http){
 function RecentService($http){
     return {
         getLoggedUser : function(){
-            return $http.get('http://localhost:8000/api/get-logged-user')
+            return $http.get('http://192.168.0.168:8125/api/get-logged-user')
                 .then(function(response){
                     return response.data;
                 });
