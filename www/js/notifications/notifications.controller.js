@@ -1,24 +1,9 @@
 angular.module('absensiApp')
 
-.controller('HomeCtrl', function($scope, HomeService, $state) {
+.controller('NotificationsCtrl', function($scope, NotificationsService, $ionicScrollDelegate, $state) {
     var ui = $scope;
 
-    HomeService.getLoggedUser()
-    .then(function(response){
-    	console.log(response);
-    	ui.name = response.data.full_name;
-    }).catch(function(response){
-        console.log(response);
-    });
-
-})
-
-.controller('RecentCtrl', function($scope, RecentService, $ionicScrollDelegate, $state) {
-    console.log('Home');
-
-    var ui = $scope;
-
-    RecentService.getLoggedUser()
+    NotificationsService.getLoggedUser()
         .then(function(response){
             console.log(response);
             ui.name = response.data.full_name;

@@ -10,12 +10,48 @@ body {
 
 .color-white, input[type="text"], input[type="text"]::placeholder,
 input[type="password"], input[type="password"]::placeholder,
-.menu, .menu .bar.bar-stable .title, ion-side-menu .item  {
+.menu, .menu .bar.bar-stable .title, ion-side-menu .item, .bar-subheader .title  {
     color: #ffffff;
 }
 
-.home-view {
+.home-view, .bar-subheader {
     background: #2c3b51;
+}
+
+.bar.bar-positive {
+    height: 110px;
+    border-color: #2c3b51;
+    background-color: #2c3b51;
+    background-image: linear-gradient(0deg, #2c3b51, #2c3b51 50%, transparent 50%);
+}
+
+.bar.bar-positive.page {
+    height: 45px;
+}
+
+.bar-subheader .title {
+    margin-top: -7px;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.bar.bar-positive h1.title {
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.group-date, .sub-title {
+    width: 100%;
+    text-align: center;
+    margin-top: 45px;
+}
+
+.group-date p.date {
+}
+
+.group-date p.clock, .sub-title p {
+    font-size: 20px;
 }
 
 div.person {
@@ -36,16 +72,16 @@ div.person.no-img {
     border: none;
 }
 
-.menu {
+.menu, .menu .bar.bar-stable {
     background: #009496;
 }
 
-.menu, .menu .bar.bar-stable {
-    background: #009595;
+.view-container.tab-content .pane, .padding.page.scroll-content {
+    background: #d3d3d3;
 }
 
-.view-container.tab-content .pane {
-    background: #d3d3d3;
+.padding.page.scroll-content {
+    top: 86px;
 }
 
 menu-open .menu-content .pane, .menu-open .menu-content .scroll-content,
@@ -95,13 +131,17 @@ button.back-to-top label {
 }
 
 button.back-to-top.show {
+    bottom: 15px;
+}
+
+button.back-to-top.show.has-tab {
     bottom: 80px;
 }
 
 button.back-to-top.hide {
     opacity: 1;
     display: block;
-    bottom: -20px;
+    bottom: -100px;
 }
 
 div.popup-container.popup-showing.active {
@@ -160,3 +200,46 @@ div.popup-container.popup-showing.active > .popup {
     border-right: .5px solid #b7b7b7;
     margin-right: 0;
 }
+
+/** LOADING SPINNER
+ */
+.loading .spinner.spinner-android, .loading-container .loading  .spinner.spinner-android {
+    display: none;
+    visibility: hidden;
+}
+.loading, .loading-container .loading {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    background-color: #009595;
+    -webkit-animation: loading 1s infinite ease-in;
+    animation: loading 1s infinite ease-in;
+}
+
+@-webkit-keyframes loading {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes loading {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+/** END LOADING SPINNER
+ */

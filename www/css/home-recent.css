@@ -1,0 +1,197 @@
+/** TAB
+ */
+
+.tabs-striped.tabs-positive .tabs, .tabs-positive > .tabs, .tabs.tabs-positive {
+    background-color: #ffffff;
+}
+.tabs-positive > .tabs, .tabs.tabs-positive {
+    border-color: #ffffff;
+    background-image: linear-gradient(0deg, #ffffff, #ffffff 50%, transparent 50%);
+    color: #ffffff;
+}
+
+.tab-item .icon {
+    height: 40px;
+    font-size: 40px;
+}
+
+.tabs-striped.tabs-positive .tab-item, .tabs-striped.tabs-positive .tab-item.activated, .tabs-striped.tabs-positive .tab-item.tab-item-active, .tabs-striped.tabs-positive .tab-item.active, .tabs-striped.tabs-positive .tab-item.activated {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.tabs-striped.tabs-positive .tab-item.tab-item-active, .tabs-striped.tabs-positive .tab-item.tab-item-active.activated {
+    border-top: 3px solid #009595;
+    color: #009595;
+}
+
+.tabs-striped.tabs-positive .tab-item, .tabs-striped.tabs-positive .tab-item.activated {
+    color: #d3d3d3;
+}
+
+.tabs-striped.tabs-positive .tab-item {
+    border-top: 1px solid #ffffff;
+}
+
+.tabs-striped.tabs-positive .tab-item.activated {
+    border-top: 3px solid #ffffff;
+}
+
+.tab-nav.tabs {
+    height: 65px;
+}
+
+/** END TAB
+ */
+
+
+.has-tabs.pane {
+    top: 110px;
+    bottom: 65px;
+}
+
+.group-statistic {
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 95%;
+    height: 200px;
+    background: #ffffff;
+}
+
+.group-statistic .group-diagram {
+    height: 65%;
+}
+
+.group-statistic .group-summary {
+    height: 35%;
+    padding: 10px;
+}
+
+.group-summary .summary {
+    background: #d3d3d3;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.group-summary .summary .wk-hours, .group-summary .summary .late-ck, .group-summary .summary .best-ck {
+    float: left;
+    width: calc(100%/3);
+    text-align: center;
+}
+
+.group-summary .summary .wk-hours {
+    border-right: 1px solid #ffffff;
+    height: 100%;
+}
+
+.group-summary .summary .late-ck {
+    height: 100%;
+}
+
+.group-summary .summary .best-ck {
+    border-left: 1px solid #ffffff;
+    height: 100%;
+}
+.group-summary .summary p, .group-summary .summary p label, .group-summary .summary label {
+    color: #2f2e2e;
+    font-weight: bold;
+}
+
+.group-summary .summary p {
+    margin: 0;
+    font-size: 25px;
+}
+
+.group-summary .summary p + label {
+    font-size: 12px;
+}
+
+button.check {
+    display: block;
+    margin: auto;
+    margin-top: 40px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 0;
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 14;
+    text-transform: uppercase;
+    font-weight: bolder;
+    background-position-x: center;
+    background-position-y: 35%;
+    background-repeat: no-repeat;
+    background-size: 32%;
+}
+
+button.check.activated {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+button.check.in {
+    background-image: url(/img/checkin-icon.png);
+    background-color: #009595;
+}
+
+button.check.out {
+    background-image: url(/img/checkout-icon.png);
+    background-color: #c9a06a;
+}
+
+.item-thumbnail-left > .calender, .item-thumbnail-left > .check-icon, .item-thumbnail-left > .warn-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    max-width: 80px;
+    max-height: 80px;
+    width: 100%;
+    height: 100%;
+    background: #445672;
+}
+
+.item-thumbnail-left > .calender label, .item-thumbnail-left > .calender label + p, .item-thumbnail-left > .calender p + span {
+    margin: 0;
+    display: block;
+    text-align: center;
+    color: #fff;
+
+}
+
+.item-thumbnail-left > .calender label {
+    background: #2c3b51;
+    padding: 4px;
+    height: 35%;
+}
+
+.item-thumbnail-left > .calender label + p {
+    padding-top: 8px;
+    height: 45%;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.item-thumbnail-left > .calender p + span {
+    height: 20%;
+    font-size: 13px;
+    margin-top: -5px;
+}
+
+.item.group-recent h2{
+    border-bottom: 1px solid #d3d3d3;
+    padding-bottom: 5px;
+}
+
+.item.group-recent h2 + p {
+    white-space: normal;
+}
+
+.recent .has-tabs, .bar-footer.has-tabs {
+    top: 110px;
+    bottom: 67px
+}

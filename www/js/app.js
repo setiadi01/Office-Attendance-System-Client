@@ -32,7 +32,9 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             });
         });
     }
-   
+
+    $rootScope.tab = false;
+    $rootScope.customCss = '';
 
     $rootScope.logout = function(){
         $window.localStorage.clear();
@@ -53,6 +55,25 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             } else {
                 $rootScope.tab = false;
             }
+
+            if(toState.url) {
+                $rootScope.page = toState.url.substr(1,toState.url.lenght);
+            } else {
+                $rootScope.page = '';
+            }
+
+            $rootScope.tick = function() {
+                $rootScope.clock = Date.now() // get the current time
+                // $timeout($rootScope.tick, 1000); // reset the timer
+            }
+
+            var updateClock = function () {
+                $rootScope.clock = new Date();
+            };
+
+            setInterval(function () {
+                $rootScope.$apply(updateClock);
+            }, 1000);
 
     });
 
@@ -128,12 +149,22 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         }
     })
     
-    .state('app.page', {
-        url: '/page',
+    .state('app.notifications', {
+        url: '/notifications',
         views: {
             'page': {
-                templateUrl: 'templates/page.html',
-                controller: 'PageCtrl'
+                templateUrl: 'templates/notifications.html',
+                controller: 'NotificationsCtrl'
+            }
+        }
+    })
+
+    .state('app.change-password', {
+        url: '/change-password',
+        views: {
+            'page': {
+                templateUrl: 'templates/change-password.html',
+                controller: 'ChangePasswordCtrl'
             }
         }
     })

@@ -1,65 +1,74 @@
 <ion-side-menus enable-menu-with-back-views="false">
   <ion-side-menu-content ng-hide="!tab">
-    <ion-nav-bar class="bar-stable">
+    <ion-nav-bar class="bar-stable hide">
       <ion-nav-back-button>
       </ion-nav-back-button>
-
-      <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-        </button>
-      </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-tabs class="tabs-icon-top tabs-positive">
+    <div class="bar bar-header bar-positive">
+      <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
+      <h1 class="title">ABSEN</h1>
+      <div class="group-date">
+        <p class="date">{{clock | date:'EEEE, dd MMMM yyyy'}}</p>
+        <p class="clock">{{clock | date:'HH:mm:ss'}}</p>
+      </div>
+      <a href="#/app/notifications" class="button button-icon button-clear ion-android-notifications"></a>
+    </div>
+    <ion-content class="{{page=='home'?'home':'recent'}}">
+      <ion-tabs class="tabs-icon-top tabs-positive">
 
-      <ion-tab title="Home" icon="ion-home" href="#/app/home">
-        <ion-nav-view name="home-tab"></ion-nav-view>
-      </ion-tab>
+        <ion-tab title="Home" icon="ion-home" href="#/app/home">
+          <ion-nav-view name="home-tab"></ion-nav-view>
+        </ion-tab>
 
-      <ion-tab title="Recent" icon="ion-clock" href="#/app/recent">
-        <ion-nav-view name="recent-tab"></ion-nav-view>
-      </ion-tab>
+        <ion-tab title="Recent" icon="ion-ios-refresh" href="#/app/recent">
+          <ion-nav-view name="recent-tab"></ion-nav-view>
+        </ion-tab>
 
-    </ion-tabs>
+      </ion-tabs>
+    </ion-content>
   </ion-side-menu-content>
 
   <ion-side-menu-content ng-hide="tab">
-    <ion-nav-bar class="bar-stable">
+    <ion-nav-bar class="bar-stable hide">
       <ion-nav-back-button>
       </ion-nav-back-button>
-
-      <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-        </button>
-      </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-nav-view name="page"></ion-nav-view>
+    <div class="bar bar-header bar-positive page">
+      <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
+      <h1 class="title">ABSEN</h1>
+      <a href="#/app/notifications" class="button button-icon button-clear ion-android-notifications"></a>
+    </div>
+    <ion-content>
+      <ion-nav-view name="page"></ion-nav-view>
+    </ion-content>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left" width="320">
+  <ion-side-menu class="menu-lists" side="left" width="310">
     <ion-header-bar class="hide bar-stable">
     </ion-header-bar>
     <ion-content class="hide-header">
 
       <div class="header-menu">
-        <div class="person side-menu" style="background: url('{{profilePicture}}')"></div>
+        <div class="person side-menu" style="background: url('{{profilePicture}}')" ng-show="profilePicture"></div>
+        <div class="person side-menu no-img" ng-show="!profilePicture"></div>
         <h1 class="color-white">{{ currentUser.full_name }}</h1>
-        <span>Developer</span>
+        <span>{{ currentUser.role }}</span>
       </div>
 
       <ion-list>
-        <ion-item menu-close href="#/app/home" class="active">
+        <ion-item menu-close href="#/app/home" ng-class="page=='home'?'active':''">
           <i class="icon ion-home"></i> Home
         </ion-item>
-        <ion-item menu-close href="#/app/notifications">
+        <ion-item menu-close href="#/app/notifications" ng-class="page=='notifications'?'active':''">
           <i class="icon ion-android-notifications"></i> Notifications
         </ion-item>
-        <ion-item menu-close href="#/app/edit-profile">
+        <ion-item menu-close href="#/app/edit-profile" ng-class="page=='edit-profile'?'active':''">
           <i class="icon ion-person"></i> Edit Profile
         </ion-item>
-        <ion-item menu-close href="#/app/change-password">
+        <ion-item menu-close href="#/app/change-password" ng-class="page=='change-password'?'active':''">
           <i class="icon ion-android-unlock"></i> Change Password
         </ion-item>
-        <ion-item menu-close href="#/app/report">
+        <ion-item menu-close href="#/app/report" ng-class="page=='report'?'active':''">
           <i class="icon ion-ios-list"></i> Report
         </ion-item>
         <ion-item class="item item-complex" ng-click="logout()">
