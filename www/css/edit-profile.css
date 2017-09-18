@@ -1,0 +1,18 @@
+div.person.edit-profile {
+    margin: auto;
+    width: 120px;
+    height: 120px;
+}
+.edit-profile #change-photo{
+    opacity: 0;
+    width: 120px;
+}
+.edit-profile label.change-photo{
+    font-size: 1.25em;
+    font-weight: 700;
+    color: #009595;
+    display: block;
+    margin-top: -34px;
+    margin-bottom: 10px;
+    pointer-events: none;
+}

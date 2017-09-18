@@ -1,9 +1,9 @@
 angular.module('absensiApp')
 
-.controller('ChangePasswordCtrl', function($scope, ChangePasswordService, $state, $ionicLoading, constant, $ionicPopup) {
+.controller('EditProfileCtrl', function($scope, EditProfileService, $state, $ionicLoading, constant, $ionicPopup) {
     var ui = $scope;
 
-    ChangePasswordService.getLoggedUser()
+    EditProfileService.getLoggedUser()
         .then(function(response){
             $ionicLoading.hide();
             if(response.status == constant.OK) {

@@ -1,10 +1,9 @@
 angular.module('absensiApp')
 
-.controller('HomeCtrl', function($scope, HomeService, $state, $ionicLoading, $ionicPopup, constant) {
-
+.controller('ReportCtrl', function($scope, ReportService, $state, $ionicPopup, $ionicLoading, constant, $ionicScrollDelegate) {
     var ui = $scope;
-    $ionicLoading.show();
-    HomeService.getLoggedUser()
+
+    ReportService.getLoggedUser()
     .then(function(response){
         $ionicLoading.hide();
         if(response.status == constant.OK) {
@@ -24,33 +23,6 @@ angular.module('absensiApp')
         }
     });
 
-})
-
-.controller('RecentCtrl', function($scope, RecentService, $ionicScrollDelegate, $state, $ionicLoading, $ionicPopup, constant) {
-    console.log("RecentCtrl")
-    var ui = $scope;
-
-    $ionicLoading.show();
-    RecentService.getLoggedUser()
-        .then(function(response){
-            $ionicLoading.hide();
-            if(response.status == constant.OK) {
-                ui.name = response.data.full_name;
-            } else {
-                $state.go('login');
-            }
-        }).catch(function(response){
-            $ionicLoading.hide();
-            if(response==null || response.statusText == constant.UNAUTHORIZED) {
-                $state.go('login')
-            } else {
-                $ionicPopup.alert({
-                    title: 'Internal server error',
-                    template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
-                });
-            }
-        });
-
     $scope.scrollSmallToTop = function() {
         $ionicScrollDelegate.$getByHandle('top-content').scrollTop(true);
     };
@@ -62,11 +34,12 @@ angular.module('absensiApp')
         if(scroll>150){
             $scope.$apply(function(){
                 $scope.actButton="show";
-            }); // show button
+            });// show button
         }else{
             $scope.$apply(function(){
                 $scope.actButton="hide";
-            }); // hide button
+            });// hide button
         }
     };
+
 })

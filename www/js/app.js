@@ -1,5 +1,5 @@
 angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'])
-.run(function($ionicPlatform, $rootScope, $window, $location, $http, constant, $ionicLoading) {
+.run(function($ionicPlatform, $rootScope, $window, $location, $http, constant, $ionicLoading, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $timeout) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -27,18 +27,36 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         }).catch(function(response){
             $ionicLoading.hide();
             $ionicPopup.alert({
-                title: 'Error',
-                template: 'Maaf, server sedang mangalami gangguan'
+                title: 'Internal server error',
+                template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
             });
         });
     }
-
     $rootScope.tab = false;
     $rootScope.customCss = '';
 
     $rootScope.logout = function(){
-        $window.localStorage.clear();
-        $location.path('/');
+        $ionicPopup.confirm({
+            title: 'Log Out of ABSEN ?',
+            template: '',
+            buttons: [{
+                text: 'Cancel',
+                type: 'with-border-right',
+            }, {
+                text: 'Log Out',
+                type: 'button-positive',
+                onTap: function (e) {
+                    delete $window.localStorage.satellizer_token; // delete token
+                    delete $window.localStorage.user; // delete user information
+                    $location.path('/login-recent');
+                }
+            }]
+        });
+    }
+
+    $rootScope.addNewAccount = function(){
+        $rootScope.forceToLogin = true;
+        $location.path('/login');
     }
 
     $rootScope.$on('$stateChangeSuccess',
@@ -64,7 +82,6 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
             $rootScope.tick = function() {
                 $rootScope.clock = Date.now() // get the current time
-                // $timeout($rootScope.tick, 1000); // reset the timer
             }
 
             var updateClock = function () {
@@ -79,11 +96,13 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://192.168.0.168:8125/api/'
+    API_URL : 'http://localhost:8000/api/',
+    OK : 'OK',
+    UNAUTHORIZED : 'Unauthorized'
 })
-.config(function($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $ionicConfigProvider) {
+.config(function($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $ionicConfigProvider, constant) {
 
-    $authProvider.loginUrl = 'http://192.168.0.168:8125/api/login';
+    $authProvider.loginUrl = constant.API_URL+'login';
 
     $ionicConfigProvider.tabs.position('bottom');
 
@@ -110,7 +129,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     .state('login-recent', {
         url: '/login-recent',
         templateUrl: 'templates/login-recent-account.html',
-        controller: 'AuthUserCtrl',
+        controller: 'AuthRecentUserCtrl',
         cssFileName : 'login.css'
     })
 
@@ -169,6 +188,26 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         }
     })
 
+    .state('app.edit-profile', {
+        url: '/edit-profile',
+        views: {
+            'page': {
+                templateUrl: 'templates/edit-profile.html',
+                controller: 'EditProfileCtrl'
+            }
+        }
+    })
+
+    .state('app.report', {
+        url: '/report',
+        views: {
+            'page': {
+                templateUrl: 'templates/report.html',
+                controller: 'ReportCtrl'
+            }
+        }
+    })
+
     .state('app.sub-page', {
         url: '/sub-page/:name',
         views: {
@@ -180,5 +219,5 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
       });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('app/home');
 });

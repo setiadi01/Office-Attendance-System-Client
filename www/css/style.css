@@ -243,3 +243,64 @@ div.popup-container.popup-showing.active > .popup {
 }
 /** END LOADING SPINNER
  */
+
+
+
+.primary-long-input {
+    margin-bottom: 20px;
+}
+
+.primary-long-input input, .primary-long-input input::placeholder {
+    color: #757272;
+}
+
+.primary-long-input input {
+    background: #ffffff;
+    font-size: 20px;
+    width: 90%;
+    text-align: left;
+    padding: 0;
+    padding: 30px 30px 30px 60px;
+    border-left: 7px solid #ffffff;
+    border-radius: 6px;
+}
+
+.primary-long-input input:disabled, .primary-long-input input[disabled] {
+    background: none;
+    border-top: 1px solid #757272;
+    border-bottom: 1px solid #757272;
+    border-left: 1px solid #757272;
+    border-right: 1px solid #757272;
+}
+
+.primary-long-input i{
+    float: left;
+    width: 35px;
+    color:  #757272;
+    font-size: 25px;
+    margin: 15px -14% 0 9%
+}
+
+.primary-long-input input.wrong:focus {
+    border-left: 7px solid #b9293d;
+}
+
+.primary-long-input input:focus {
+    border-left: 7px solid #009595;
+}
+
+button.primary-long-btn {
+    width: 90%;
+    background: #009595;
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.box-4 {
+    width: calc(100%/4);
+    float: left;
+}

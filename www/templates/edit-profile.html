@@ -1,0 +1,40 @@
+<div class="bar bar-subheader">
+  <h2 class="title">Edit Profile</h2>
+</div>
+<ion-content class="padding page">
+
+  <form class="edit-profile" name="edit-profile-form">
+  <div class="row row-center">
+    <div class="col col-center text-center">
+        <div class="head">
+            <div class="person edit-profile {{!profilePicture?'no-img':''}}" style="{{profilePicture?'background: url('+profilePicture+')':''}}"></div>
+
+            <input type="file" accept="image/*"  capture="camera" id="change-photo">
+            <label for="change-photo" class="change-photo">Change photo</label>
+        </div>
+        <div class="content">
+            <div class="primary-long-input">
+                <i class="icon ion-card"></i>
+                <input class="line" type="text" placeholder="Your name" name="yourName" ng-model="yourName" required>
+            </div>
+            <div class="primary-long-input">
+                <i class="icon ion-person"></i>
+                <input class="line" type="text" placeholder="Username" name="userName" ng-model="userName" required>
+            </div>
+            <div class="primary-long-input">
+                <i class="icon ion-iphone"></i>
+                <input class="line" type="text" placeholder="Phone number" name="phoneNumber" ng-model="phoneNumber" disabled>
+            </div>
+            <div class="primary-long-input">
+                <i class="icon ion-email"></i>
+                <input class="line" type="text" placeholder="Email address" name="emailAddress" ng-model="emailAddress" disabled>
+            </div>
+        </div>
+        <div class="footer">
+            <button type="submit" class="primary-long-btn" ng-disabled="!yourName || !userName">Save</button>
+        </div>
+    </div>
+  </div>
+  </form>
+
+</ion-content>

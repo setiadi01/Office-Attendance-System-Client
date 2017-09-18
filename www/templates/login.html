@@ -1,4 +1,4 @@
-<ion-view id="login-page" class="home-view" hide-nav-bar="true" view-title="Login" name="login-view">
+<ion-view id="login-page" class="home-view" hide-nav-bar="true" view-title="Login" name="login-view" cache-view="false">
     <ion-content class="padding">
         <div class="row row-center">
             <div class="col col-center text-center">
@@ -10,7 +10,7 @@
                         <input type="text" placeholder="username" name="username" ng-model="username"
                                required>
                     </div>
-                    <a href="#/login-password/{{username}}" class="button button-positive next-button color-white" ng-disabled="loginForm.$invalid">Next</a>
+                    <a href="#/login-password/{{username}}" class="button button-positive next-button color-white" ng-disabled="!username">Next</a>
                 </form>
             </div>
         </div>

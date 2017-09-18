@@ -5,6 +5,7 @@
 
 #login-page.home-view h1 {
     padding-top: 30px;
+    font-weight: bold;
 }
 
 div.person.login {
@@ -41,6 +42,11 @@ div.person.login {
     padding: 10px 10px 13px 10px;
     width: 86%;
     background: rgba(0, 0, 0, 0.25);
+}
+
+.login-password button:disabled,
+.login-password button[disabled]{
+    opacity: 0.5;
 }
 
 .input-password .show-toggle, .input-password .hide-toggle {
@@ -110,6 +116,9 @@ div.person.login {
     text-align: left;
     font-size: 17px;
     text-decoration: none;
+    margin-bottom: 50px;
+    margin-top: 20px;
+    margin-left: 5px;
 }
 
 .add-different-account i {
@@ -118,4 +127,16 @@ div.person.login {
     font-size: 25px;
     margin-right: 10px;
     margin-top: -4px;
+}
+
+#login-page .bar.bar-header h1 {
+    padding-top: 50px;
+    height: 110px;
+}
+
+/*#login-page.recent-acount .scroll-content {*/
+    /*top: 110px;*/
+/*}*/
+#login-page.recent-acount .recent-account.list {
+    top: 110px;
 }

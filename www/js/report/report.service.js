@@ -1,7 +1,7 @@
 angular.module('absensiApp')
-.service('NotificationsService', NotificationsService);
+.service('ReportService', ReportService);
 
-function NotificationsService($http, constant){
+function ReportService($http, constant){
     return {
         getLoggedUser : function(){
             return $http.get(constant.API_URL+'get-logged-user')

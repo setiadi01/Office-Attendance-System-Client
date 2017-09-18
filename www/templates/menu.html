@@ -1,10 +1,10 @@
 <ion-side-menus enable-menu-with-back-views="false">
-  <ion-side-menu-content ng-hide="!tab">
+  <ion-side-menu-content>
     <ion-nav-bar class="bar-stable hide">
       <ion-nav-back-button>
       </ion-nav-back-button>
     </ion-nav-bar>
-    <div class="bar bar-header bar-positive">
+    <div class="bar bar-header bar-positive" ng-hide="!tab">
       <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
       <h1 class="title">ABSEN</h1>
       <div class="group-date">
@@ -13,7 +13,12 @@
       </div>
       <a href="#/app/notifications" class="button button-icon button-clear ion-android-notifications"></a>
     </div>
-    <ion-content class="{{page=='home'?'home':'recent'}}">
+    <div class="bar bar-header bar-positive page" ng-hide="tab">
+      <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
+      <h1 class="title">ABSEN</h1>
+      <a href="#/app/notifications" class="button button-icon button-clear ion-android-notifications"></a>
+    </div>
+    <ion-content class="{{page=='home'?'home':'recent'}}" ng-hide="!tab">
       <ion-tabs class="tabs-icon-top tabs-positive">
 
         <ion-tab title="Home" icon="ion-home" href="#/app/home">
@@ -26,19 +31,7 @@
 
       </ion-tabs>
     </ion-content>
-  </ion-side-menu-content>
-
-  <ion-side-menu-content ng-hide="tab">
-    <ion-nav-bar class="bar-stable hide">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
-    <div class="bar bar-header bar-positive page">
-      <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
-      <h1 class="title">ABSEN</h1>
-      <a href="#/app/notifications" class="button button-icon button-clear ion-android-notifications"></a>
-    </div>
-    <ion-content>
+    <ion-content ng-hide="tab">
       <ion-nav-view name="page"></ion-nav-view>
     </ion-content>
   </ion-side-menu-content>
@@ -49,8 +42,7 @@
     <ion-content class="hide-header">
 
       <div class="header-menu">
-        <div class="person side-menu" style="background: url('{{profilePicture}}')" ng-show="profilePicture"></div>
-        <div class="person side-menu no-img" ng-show="!profilePicture"></div>
+        <div class="person side-menu {{!profilePicture?'no-img':''}}" style="{{profilePicture?'background: url('+profilePicture+')':''}}"></div>
         <h1 class="color-white">{{ currentUser.full_name }}</h1>
         <span>{{ currentUser.role }}</span>
       </div>
@@ -71,7 +63,7 @@
         <ion-item menu-close href="#/app/report" ng-class="page=='report'?'active':''">
           <i class="icon ion-ios-list"></i> Report
         </ion-item>
-        <ion-item class="item item-complex" ng-click="logout()">
+        <ion-item class="item item-complex" ng-click="logout()" >
           <a class="item-content">
             <i class="icon ion-power"></i> Logout
           </a>

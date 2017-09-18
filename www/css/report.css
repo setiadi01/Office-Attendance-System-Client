@@ -1,0 +1,69 @@
+.filter-report{
+    height: 50px;
+    background: #ffffff;
+    margin: -10px -10px 10px -10px;
+}
+.item.group-report h2{
+    border-bottom: 1px solid #d3d3d3;
+    padding-bottom: 5px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #3e3e3e;
+}
+
+.item.group-report h2 + p {
+    font-size: 40px;
+    height: 53px;
+    font-weight: bold;
+    padding-top: 20px;
+    color: #3e3e3e;
+}
+
+.item.group-report h2 + p > span {
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.summary-report {
+    width: 100%;
+    height: 100px;
+}
+
+.box-4.total-check-in p, .box-4.late-to-check-in p, .box-4.not-check-in p, .box-4.working-hours p {
+    font-size: 45px;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+    margin-bottom: 17px;
+}
+
+.box-4.total-check-in label, .box-4.late-to-check-in label, .box-4.not-check-in label, .box-4.working-hours label {
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 15px;
+    font-weight: bold;
+}
+
+.box-4.total-check-in, .box-4.late-to-check-in, .box-4.not-check-in, .box-4.working-hours {
+    height: 90px;
+    padding: 5px;
+}
+
+.box-4.total-check-in {
+    background: #2D9131;
+}
+
+.box-4.late-to-check-in {
+    background: #C39419;
+}
+
+.box-4.not-check-in {
+    background: #AE1E1E;
+}
+
+.box-4.working-hours {
+    background: #009595;
+}

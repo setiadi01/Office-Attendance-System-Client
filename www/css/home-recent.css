@@ -182,12 +182,12 @@ button.check.out {
     margin-top: -5px;
 }
 
-.item.group-recent h2{
+.item.group-report h2{
     border-bottom: 1px solid #d3d3d3;
     padding-bottom: 5px;
 }
 
-.item.group-recent h2 + p {
+.item.group-report h2 + p {
     white-space: normal;
 }
 
