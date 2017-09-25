@@ -26,38 +26,41 @@ angular.module('absensiApp')
 
     $ionicPlatform.ready(function() {
 
-            $ionicLoading.show();
+        $scope.doScan = function () {
             $cordovaBarcodeScanner.scan()
-                .then(function(barcodeData) {
+                .then(function (barcodeData) {
                     // Success! Barcode data is here
-                    if(barcodeData.text) {
-                        HomeService.checkin({checkin : barcodeData.text})
-                            .then(function(response){
+                    if (barcodeData.text) {
+
+                        $ionicLoading.show();
+                        HomeService.checkin({checkin: barcodeData.text})
+                            .then(function (response) {
                                 $ionicLoading.hide();
                                 $ionicPopup.alert({
                                     title: 'Success! Barcode data is here',
                                     template: response
                                 });
-                            }).catch(function(response){
-                                $ionicLoading.hide();
-                                if(response==null || response.statusText == constant.UNAUTHORIZED) {
-                                    $state.go('login')
-                                } else {
-                                    $ionicPopup.alert({
-                                        title: 'Internal server error',
-                                        template: response
-                                    });
-                                }
-                            });
+                            }).catch(function (response) {
+                            $ionicLoading.hide();
+                            if (response == null || response.statusText == constant.UNAUTHORIZED) {
+                                $state.go('login')
+                            } else {
+                                $ionicPopup.alert({
+                                    title: 'Internal server error',
+                                    template: response
+                                });
+                            }
+                        });
                     }
 
-                }, function(error) {
+                }, function (error) {
                     // An error occurred
                     $ionicPopup.alert({
                         title: 'Internal server error',
                         template: error
                     });
                 });
+        }
     });
 
 })
