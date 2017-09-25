@@ -12,8 +12,8 @@ function HomeService($http, constant){
 
 		},
 
-		checkin : function(){
-            return $http.post(constant.API_URL+'checkin')
+		checkin : function(input){
+            return $http.post(constant.API_URL+'checkin', input)
                 .then(function(response){
                     return response.data;
                 })
