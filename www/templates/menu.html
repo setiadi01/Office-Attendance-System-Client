@@ -48,7 +48,7 @@
       </div>
 
       <ion-list>
-        <ion-item menu-close href="#/app/home" ng-class="page=='home'?'active':''">
+        <ion-item menu-close href="#/app/home" ng-class="page=='home'?'active':page=='recent'?'active':''">
           <i class="icon ion-home"></i> Home
         </ion-item>
         <ion-item menu-close href="#/app/notifications" ng-class="page=='notifications'?'active':''">
@@ -63,7 +63,7 @@
         <ion-item menu-close href="#/app/report" ng-class="page=='report'?'active':''">
           <i class="icon ion-ios-list"></i> Report
         </ion-item>
-        <ion-item class="item item-complex" ng-click="logout()" >
+        <ion-item class="item item-complex" ng-click="logout()" menu-toggle="left">
           <a class="item-content">
             <i class="icon ion-power"></i> Logout
           </a>

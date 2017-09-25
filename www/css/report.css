@@ -1,5 +1,5 @@
 .filter-report{
-    height: 50px;
+    height: 40px;
     background: #ffffff;
     margin: -10px -10px 10px -10px;
 }
@@ -12,7 +12,7 @@
 }
 
 .item.group-report h2 + p {
-    font-size: 40px;
+    font-size: 30px;
     height: 53px;
     font-weight: bold;
     padding-top: 20px;
@@ -66,4 +66,17 @@
 
 .box-4.working-hours {
     background: #009595;
+}
+
+button.date-picker {
+    float: left;
+    height: 40px;
+    width: 50%;
+    border: none;
+    background: none;
+    color: #3e3e3e;
+}
+
+button.date-picker.date-from {
+    border-right: 1px solid #d3d3d3;
 }

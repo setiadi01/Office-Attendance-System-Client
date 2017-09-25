@@ -4,6 +4,13 @@
 .tabs-striped.tabs-positive .tabs, .tabs-positive > .tabs, .tabs.tabs-positive {
     background-color: #ffffff;
 }
+
+.tabs-striped.tabs-positive .tabs, .tabs-positive {
+    -webkit-box-shadow: 0px 6px 14px 6px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0px 6px 14px 6px rgba(0,0,0,0.4);
+    box-shadow: 0px 6px 14px 6px rgba(0,0,0,0.4);
+}
+
 .tabs-positive > .tabs, .tabs.tabs-positive {
     border-color: #ffffff;
     background-image: linear-gradient(0deg, #ffffff, #ffffff 50%, transparent 50%);
@@ -11,8 +18,8 @@
 }
 
 .tab-item .icon {
-    height: 40px;
-    font-size: 40px;
+    height: 30px;
+    font-size: 30px;
 }
 
 .tabs-striped.tabs-positive .tab-item, .tabs-striped.tabs-positive .tab-item.activated, .tabs-striped.tabs-positive .tab-item.tab-item-active, .tabs-striped.tabs-positive .tab-item.active, .tabs-striped.tabs-positive .tab-item.activated {
@@ -38,7 +45,7 @@
 }
 
 .tab-nav.tabs {
-    height: 65px;
+    height: 50px;
 }
 
 /** END TAB
@@ -46,8 +53,8 @@
 
 
 .has-tabs.pane {
-    top: 110px;
-    bottom: 65px;
+    top: 100px;
+    bottom: 50px;
 }
 
 .group-statistic {
@@ -112,7 +119,7 @@
 button.check {
     display: block;
     margin: auto;
-    margin-top: 40px;
+    margin-top: 35px;
     width: 180px;
     height: 180px;
     border-radius: 50%;
@@ -135,12 +142,12 @@ button.check.activated {
 }
 
 button.check.in {
-    background-image: url(/img/checkin-icon.png);
+    background-image: url('../img/checkin-icon.png');
     background-color: #009595;
 }
 
 button.check.out {
-    background-image: url(/img/checkout-icon.png);
+    background-image: url('../img/checkout-icon.png');
     background-color: #c9a06a;
 }
 
@@ -182,16 +189,24 @@ button.check.out {
     margin-top: -5px;
 }
 
-.item.group-report h2{
+.item.group-recent h2{
     border-bottom: 1px solid #d3d3d3;
     padding-bottom: 5px;
 }
 
-.item.group-report h2 + p {
+.item.group-recent h2 + p {
     white-space: normal;
 }
 
 .recent .has-tabs, .bar-footer.has-tabs {
-    top: 110px;
-    bottom: 67px
+    top: 100px;
+    bottom: 50px
+}
+
+.home .has-tabs {
+    height: 100%;
+}
+
+.home .has-tabs .scroll {
+    height: calc(100% - 110px);
 }

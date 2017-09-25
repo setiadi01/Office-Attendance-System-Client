@@ -1,11 +1,18 @@
 <div class="bar bar-subheader">
     <h2 class="title">Report</h2>
 </div>
-<ion-content class="padding page" on-scroll="gotScrolled(this)" delegate-handle="top-content">
+<ion-content class="padding page" on-scroll="gotScrolled()" delegate-handle="top-content-report">
     <div class="list">
 
         <div class="filter-report">
-
+            <button type="button" class="date-picker date-from" ng-click="openDateFrom()">
+                <label class="icon ion-calendar"></label>
+                {{dateFrom}}
+            </button>
+            <button type="button" class="date-picker date-to" ng-click="openDateTo()">
+                <label class="icon ion-calendar"></label>
+                {{dateTo}}
+            </button>
         </div>
 
         <div class="summary-report">

@@ -10,7 +10,15 @@ function HomeService($http, constant){
 					return response.data;
 				})
 
-		}
+		},
+
+		checkin : function(){
+            return $http.post(constant.API_URL+'checkin')
+                .then(function(response){
+                    return response.data;
+                })
+
+        },
 	}
 }
 

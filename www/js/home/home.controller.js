@@ -1,6 +1,6 @@
 angular.module('absensiApp')
 
-.controller('HomeCtrl', function($scope, HomeService, $state, $ionicLoading, $ionicPopup, constant) {
+.controller('HomeCtrl', function($ionicPlatform, $scope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner, $cordovaStatusbar) {
 
     var ui = $scope;
     $ionicLoading.show();
@@ -24,10 +24,45 @@ angular.module('absensiApp')
         }
     });
 
+    $ionicPlatform.ready(function() {
+
+            $ionicLoading.show();
+            $cordovaBarcodeScanner.scan()
+                .then(function(barcodeData) {
+                    // Success! Barcode data is here
+                    if(barcodeData.text) {
+                        HomeService.checkin({checkin : barcodeData.text})
+                            .then(function(response){
+                                $ionicLoading.hide();
+                                $ionicPopup.alert({
+                                    title: 'Success! Barcode data is here',
+                                    template: response
+                                });
+                            }).catch(function(response){
+                                $ionicLoading.hide();
+                                if(response==null || response.statusText == constant.UNAUTHORIZED) {
+                                    $state.go('login')
+                                } else {
+                                    $ionicPopup.alert({
+                                        title: 'Internal server error',
+                                        template: response
+                                    });
+                                }
+                            });
+                    }
+
+                }, function(error) {
+                    // An error occurred
+                    $ionicPopup.alert({
+                        title: 'Internal server error',
+                        template: error
+                    });
+                });
+    });
+
 })
 
 .controller('RecentCtrl', function($scope, RecentService, $ionicScrollDelegate, $state, $ionicLoading, $ionicPopup, constant) {
-    console.log("RecentCtrl")
     var ui = $scope;
 
     $ionicLoading.show();
@@ -56,7 +91,7 @@ angular.module('absensiApp')
     };
 
     $scope.actButton="hide";
-    $scope.gotScrolled = function(asas) {
+    $scope.gotScrolled = function() {
         var scroll = $ionicScrollDelegate.$getByHandle('top-content').getScrollPosition().top;
 
         if(scroll>150){

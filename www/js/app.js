@@ -1,5 +1,5 @@
-angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'])
-.run(function($ionicPlatform, $rootScope, $window, $location, $http, constant, $ionicLoading, $ionicPopup, $ionicSideMenuDelegate, $ionicHistory, $timeout) {
+angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying', 'ngCordova', 'ionic-datepicker'])
+.run(function($ionicPlatform, $rootScope, $window, $location, $http, constant, $ionicLoading, $ionicPopup, $cordovaStatusbar, $ionicHistory) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -11,6 +11,14 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+
+        $ionicPlatform.ready(function() {
+
+            $cordovaStatusbar.overlaysWebView(false);
+            $cordovaStatusbar.style(1);
+            $cordovaStatusbar.styleHex('#2c3b51');
+
+        });
     });
 
     $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
@@ -46,8 +54,16 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
                 text: 'Log Out',
                 type: 'button-positive',
                 onTap: function (e) {
+                    $ionicHistory.clearCache();
+                    $ionicHistory.clearHistory();
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true,
+                        historyRoot: true
+                    });
+
                     delete $window.localStorage.satellizer_token; // delete token
                     delete $window.localStorage.user; // delete user information
+
                     $location.path('/login-recent');
                 }
             }]
@@ -96,7 +112,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://localhost:8000/api/',
+    API_URL : 'http://192.168.0.168:8000/api/',
     OK : 'OK',
     UNAUTHORIZED : 'Unauthorized'
 })
@@ -141,6 +157,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     })
 
     .state('app', {
+        cache: false,
         url: '/app',
         abstract: true,
         templateUrl: 'templates/menu.html'

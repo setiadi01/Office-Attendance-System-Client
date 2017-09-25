@@ -1,12 +1,18 @@
 angular.module('absensiApp')
 
-.controller('AuthUserCtrl', function($scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $window) {
-	console.log($window.localStorage.user_lists);
+.controller('AuthUserCtrl', function($scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $window, $ionicHistory, $ionicPlatform) {
 	if($window.localStorage !=null && $window.localStorage.user_lists !=null && $window.localStorage.user_lists != '{}' && !$rootScope.forceToLogin) {
 
         $state.go('login-recent');
 
 	}
+
+	if($rootScope.forceToLogin){
+        $ionicPlatform.onHardwareBackButton(function() {
+            $state.go('login-recent');
+        });
+	}
+
 	var ui = $scope;
     ui.login = function(username){
 		$state.go('login-password', {username: username});
@@ -14,32 +20,36 @@ angular.module('absensiApp')
     }
 })
 
-.controller('AuthRecentUserCtrl', function($scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $window, $ionicLoading) {
+.controller('AuthRecentUserCtrl', function(AuthService, $scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $window, $ionicHistory) {
 
 	var userJsonList = JSON.parse($window.localStorage.user_lists);
     generateUserList(userJsonList);
 
 	function generateUserList(lastUserList) {
-
-        var keyList = Object.keys(lastUserList);
-        var userArrayList = [];
-        for (var i = 0; i < keyList.length; i++) {
-            var key = keyList[i];
-            userArrayList.push(lastUserList[key]);
-        }
+		var keyList = Object.keys(lastUserList);
+		var userArrayList = [];
+		for (var i = 0; i < keyList.length; i++) {
+			var key = keyList[i];
+			var lastUserListObj = lastUserList[key];
+			userArrayList.push(lastUserListObj);
+		}
 		$scope.userLists = userArrayList;
-
     }
     
     $scope.removeAccount = function (user) {
 		delete userJsonList[user];
-        console.log(userJsonList)
         $window.localStorage.setItem('user_lists', JSON.stringify(userJsonList));
 
         userJsonList = JSON.parse($window.localStorage.user_lists);
         generateUserList(userJsonList);
 
         if($scope.userLists.length == 0) {
+
+            $ionicHistory.nextViewOptions({
+                disableBack: true,
+                historyRoot: true
+            });
+
             $state.go('login');
 		}
 
@@ -48,7 +58,7 @@ angular.module('absensiApp')
 
 })
 
-.controller('AuthPassCtrl', function($scope, $ionicLoading, $auth, $ionicPopup, $state, $stateParams, $http, $ionicPopup, AuthService, $ionicHistory) {
+.controller('AuthPassCtrl', function($scope, $ionicLoading, $auth, $ionicPopup, $state, $stateParams, $http, $ionicPopup, AuthService, $ionicHistory, constant) {
 	$scope.showPasswordIsChecked = false;
 	$scope.username = localStorage.getItem('username');
 	$scope.close = function () {
@@ -68,16 +78,15 @@ angular.module('absensiApp')
 	AuthService.getProfilePicture(username)
 	.then(function(response){
 		$ionicLoading.hide();
-		console.log(response.data);
 		//ui.pic = response.data;
 		if (response.data == null) {
-			ui.ImageUrl = ''
+			ui.profilePicture = ''
 		}else{
 			loadImage(response.data)
 		}
 	}).catch(function(response){
 		$ionicLoading.hide();
-        ui.ImageUrl = ''
+        ui.profilePicture = ''
 	});
 
 	function loadImage(image){
@@ -85,13 +94,11 @@ angular.module('absensiApp')
 		AuthService.loadImage(image)
 		.then(function(response){
 			$ionicLoading.hide();
-			console.log(response);
 			var imageBlob = new Blob([response.data], { type: response.headers('Content-Type') });
-	        ui.ImageUrl = (window.URL || window.webkitURL).createObjectURL(imageBlob);
-
+	        ui.profilePicture = (window.URL || window.webkitURL).createObjectURL(imageBlob);
 		}).catch(function(response){
 			$ionicLoading.hide();
-            ui.ImageUrl = ''
+            ui.profilePicture = ''
 		});
 	}
 
@@ -99,19 +106,18 @@ angular.module('absensiApp')
 		$ionicLoading.show();
 		$auth.login({username : username, password : password})
 			.then(function(response) {
-				console.log(response.data.user);
-				if (response.data.status == 'OK') {
+				if (response.data.status == constant.OK) {
 
                     localStorage.setItem('user', JSON.stringify(response.data.user));
 
                     var currentUser = response.data.user;
 					var userJson = {};
-                    userJson[username] = {"username" : currentUser.username, "fullname" : currentUser.full_name, "profilePicture" : currentUser.profile_picture};
+                    userJson[username] = {"username" : currentUser.username, "fullname" : currentUser.full_name, "profilePicture" : $scope.profilePicture, "pictureName" : currentUser.profilePicture};
 
                     if(localStorage!=null && localStorage.user_lists !=null) {
 
                     	var currentList = JSON.parse(localStorage.user_lists);
-                        currentList[username] = {"username" : currentUser.username, "fullname" : currentUser.full_name, "profilePicture" : currentUser.profile_picture};
+                        currentList[username] = {"username" : currentUser.username, "fullname" : currentUser.full_name, "profilePicture" : $scope.profilePicture, "pictureName" : currentUser.profilePicture};
 
                         localStorage.setItem('user_lists', JSON.stringify(currentList));
 
@@ -146,7 +152,6 @@ angular.module('absensiApp')
 				}
 			})
 			.catch(function(response) {
-				console.log(response);
 				$ionicLoading.hide();
                 $ionicPopup.alert({
                     title: 'Internal server error',

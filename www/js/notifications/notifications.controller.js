@@ -25,12 +25,12 @@ angular.module('absensiApp')
         });
 
     $scope.scrollSmallToTop = function() {
-        $ionicScrollDelegate.$getByHandle('top-content').scrollTop(true);
+        $ionicScrollDelegate.$getByHandle('top-content-notification').scrollTop(true);
     };
 
     $scope.actButton="hide";
-    $scope.gotScrolled = function(asas) {
-        var scroll = $ionicScrollDelegate.$getByHandle('top-content').getScrollPosition().top;
+    $scope.gotScrolled = function() {
+        var scroll = $ionicScrollDelegate.$getByHandle('top-content-notification').getScrollPosition().top;
 
         if(scroll>150){
             $scope.$apply(function(){
