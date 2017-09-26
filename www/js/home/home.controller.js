@@ -31,28 +31,23 @@ angular.module('absensiApp')
                 .then(function (barcodeData) {
                     // Success! Barcode data is here
                     if (barcodeData.text) {
-
                         $ionicLoading.show();
                         HomeService.checkin({checkin: barcodeData.text})
                             .then(function (response) {
-                                $ionicLoading.hide();
-                                $ionicPopup.alert({
-                                    title: 'Success! Barcode data is here',
-                                    template: response
+                                if (response.status == 'OK') {
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Success! Barcode data is here'
+                                    });
+                                }
+                                }, function (response) {
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Internal server error',
+                                        template: response.status
+                                    });
                                 });
-                            }).catch(function (response) {
-                            $ionicLoading.hide();
-                            if (response == null || response.statusText == constant.UNAUTHORIZED) {
-                                $state.go('login')
-                            } else {
-                                $ionicPopup.alert({
-                                    title: 'Internal server error',
-                                    template: response
-                                });
-                            }
-                        });
                     }
-
                 }, function (error) {
                     // An error occurred
                     $ionicPopup.alert({
