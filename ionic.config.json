@@ -1,7 +1,7 @@
 {
   "name": "Absen",
   "app_id": "",
-  "type": "absen",
+  "type": "ionic1",
   "integrations": {
     "gulp": {},
     "cordova": {}

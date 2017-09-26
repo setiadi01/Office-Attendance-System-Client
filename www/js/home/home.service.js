@@ -12,8 +12,23 @@ function HomeService($http, constant){
 
 		},
 
+        getStatusAbsen : function(){
+            return $http.get(constant.API_URL+'get-status-absen')
+                .then(function(response){
+                    return response.data;
+                })
+
+        },
+
 		checkin : function(input){
             return $http.post(constant.API_URL+'checkin', input)
+                .then(function(response){
+                    return response.data;
+                })
+
+        },
+        checkout : function(input){
+            return $http.post(constant.API_URL+'checkout', input)
                 .then(function(response){
                     return response.data;
                 })

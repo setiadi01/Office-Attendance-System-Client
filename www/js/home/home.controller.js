@@ -11,6 +11,7 @@ angular.module('absensiApp')
         $ionicLoading.hide();
         if(response.status == constant.OK) {
             // do something here
+            console.log(response);
         } else {
             $state.go('login');
         }
@@ -26,6 +27,26 @@ angular.module('absensiApp')
         }
     });
 
+    $scope.getStatusAbsen = function () {
+        HomeService.getStatusAbsen()
+            .then(function (response) {
+                $ionicLoading.hide();
+                if (response.status == constant.OK) {
+                    console.log(response);
+                    localStorage.setItem('status', response.data);
+                }
+            }).catch(function (response) {
+            $ionicLoading.hide();
+            $ionicPopup.alert({
+                title: 'Internal server error',
+                template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
+            });
+        });
+        $rootScope.statusabsen = localStorage.getItem('status');
+    }
+    $scope.getStatusAbsen();
+
+
     $ionicPlatform.ready(function() {
 
         $scope.doScan = function () {
@@ -37,11 +58,63 @@ angular.module('absensiApp')
                         HomeService.checkin({checkin: barcodeData.text})
                             .then(function (response) {
                                 if (response.status == 'OK') {
+                                    $scope.getStatusAbsen();
                                     $ionicLoading.hide();
                                     $ionicPopup.alert({
-                                        title: 'Success! Barcode data is here'
+                                        title: 'Success!',
+                                        template: 'Barcode data is here'
                                     });
                                 }
+                                else {
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Checkout Failed',
+                                        template: 'Try Again'
+                                    });
+                                }
+                            }, function (response) {
+                                $ionicLoading.hide();
+                                $ionicPopup.alert({
+                                    title: 'Internal server error'
+                                });
+                            });
+                    }
+                }, function (error) {
+                    // An error occurred
+                    $ionicPopup.alert({
+                        title: 'Internal server error'
+                    });
+                })
+        }
+        $scope.doScanCheckout = function () {
+            if(localStorage.getItem('status') == 'O'){
+                $ionicPopup.alert({
+                    title: 'You Have Checked Out'
+                });
+            }
+            else {
+                $cordovaBarcodeScanner.scan()
+                    .then(function (barcodeData) {
+                        // Success! Barcode data is here
+                        if (barcodeData.text) {
+                            $ionicLoading.show();
+                            HomeService.checkout({checkout: barcodeData.text})
+                                .then(function (response) {
+                                    if (response.status == 'OK') {
+                                        $scope.getStatusAbsen();
+                                        $ionicLoading.hide();
+                                        $ionicPopup.alert({
+                                            title: 'Success! Barcode data is here'
+                                        });
+                                    }
+                                    else {
+                                        $ionicLoading.hide();
+                                        $ionicPopup.alert({
+                                            title: 'Checkout Failed',
+                                            template: response.status
+                                        });
+                                    }
+
                                 }, function (response) {
                                     $ionicLoading.hide();
                                     $ionicPopup.alert({
@@ -49,14 +122,15 @@ angular.module('absensiApp')
                                         template: response.status
                                     });
                                 });
-                    }
-                }, function (error) {
-                    // An error occurred
-                    $ionicPopup.alert({
-                        title: 'Internal server error',
-                        template: error
-                    });
-                }
+                        }
+                    }, function (error) {
+                        // An error occurred
+                        $ionicPopup.alert({
+                            title: 'Internal server error',
+                            template: error
+                        });
+                    })
+            }
         }
     });
 
