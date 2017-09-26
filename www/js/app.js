@@ -21,25 +21,30 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         });
     });
 
-    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
-
-    if ($rootScope.currentUser !=null && $rootScope.currentUser.profile_picture != null) {
-        $http.get(constant.API_URL+'images/'+$rootScope.currentUser.profile_picture, {
-            responseType: 'arraybuffer'
-        })
-        .then(function(response){
-            $ionicLoading.hide();
-            var imageBlob = new Blob([response.data], { type: response.headers('Content-Type') });
-            $rootScope.profilePicture = (window.URL || window.webkitURL).createObjectURL(imageBlob);
-
-        }).catch(function(response){
-            $ionicLoading.hide();
-            $ionicPopup.alert({
-                title: 'Internal server error',
-                template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
+    $rootScope.loadImg = function(image) {
+        if (image) {
+            $http.get(constant.API_URL + 'images/' + image, {
+                responseType: 'arraybuffer'
+            })
+            .then(function (response) {
+                var imageBlob = new Blob([response.data], {type: response.headers('Content-Type')});
+                $rootScope.profilePicture = (window.URL || window.webkitURL).createObjectURL(imageBlob);
+            }).catch(function (response) {
+                $ionicPopup.alert({
+                    title: 'Internal server error',
+                    template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
+                });
             });
-        });
+        } else {
+            $rootScope.profilePicture = '';
+        }
+    };
+
+    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
+    if($rootScope.currentUser) {
+        $rootScope.loadImg($rootScope.currentUser.profile_picture);
     }
+
     $rootScope.tab = false;
     $rootScope.customCss = '';
 
@@ -165,6 +170,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
     .state('app.home', {
         url: '/home',
+        cache: false,
         tab: true,
         views: {
             'home-tab': {

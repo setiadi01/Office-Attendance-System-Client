@@ -1,14 +1,16 @@
 angular.module('absensiApp')
 
-.controller('HomeCtrl', function($ionicPlatform, $scope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner, $cordovaStatusbar) {
+.controller('HomeCtrl', function($ionicPlatform, $scope, $rootScope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner, $cordovaStatusbar) {
 
-    var ui = $scope;
+    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
+    $scope.loadImg($rootScope.currentUser.profile_picture);
+
     $ionicLoading.show();
     HomeService.getLoggedUser()
     .then(function(response){
         $ionicLoading.hide();
         if(response.status == constant.OK) {
-            ui.name = response.data.full_name;
+            // do something here
         } else {
             $state.go('login');
         }
@@ -27,39 +29,43 @@ angular.module('absensiApp')
     $ionicPlatform.ready(function() {
 
         $scope.doScan = function () {
-            $cordovaBarcodeScanner.scan()
-                .then(function (barcodeData) {
-                    // Success! Barcode data is here
-                    if (barcodeData.text) {
+            var barcode = $cordovaBarcodeScanner.scan()
+                            .then(function (barcodeData) {
+                                // Success! Barcode data is here
+                                if (barcodeData.text) {
+                                   return barcodeData.text;
+                                }
 
-                        $ionicLoading.show();
-                        HomeService.checkin({checkin: barcodeData.text})
-                            .then(function (response) {
-                                $ionicLoading.hide();
-                                $ionicPopup.alert({
-                                    title: 'Success! Barcode data is here',
-                                    template: response
-                                });
-                            }).catch(function (response) {
-                            $ionicLoading.hide();
-                            if (response == null || response.statusText == constant.UNAUTHORIZED) {
-                                $state.go('login')
-                            } else {
-                                $ionicPopup.alert({
-                                    title: 'Internal server error',
-                                    template: response
-                                });
-                            }
-                        });
-                    }
+                            });
 
-                }, function (error) {
-                    // An error occurred
-                    $ionicPopup.alert({
-                        title: 'Internal server error',
-                        template: error
+            if(barcode) {
+                $ionicLoading.show();
+                HomeService.checkin({"checkin" : barcode})
+                    .then(function (response) {
+                        $ionicLoading.hide();
+                        if(response.status == constant.OK) {
+                            $ionicPopup.alert({
+                                title: 'Success to login',
+                                template: response
+                            });
+                        }
+                    }).catch(function (response) {
+                        $ionicLoading.hide();
+                        if (response == null || response.statusText == constant.UNAUTHORIZED) {
+                            $state.go('login')
+                        } else {
+                            $ionicPopup.alert({
+                                title: 'Internal server error',
+                                template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
+                            });
+                        }
                     });
+            } else {
+                $ionicPopup.alert({
+                    title: 'Error!',
+                    template: "Can't read QR Code. Please try again with valid QR Code"
                 });
+            }
         }
     });
 
