@@ -29,43 +29,34 @@ angular.module('absensiApp')
     $ionicPlatform.ready(function() {
 
         $scope.doScan = function () {
-            var barcode = $cordovaBarcodeScanner.scan()
-                            .then(function (barcodeData) {
-                                // Success! Barcode data is here
-                                if (barcodeData.text) {
-                                   return barcodeData.text;
+            $cordovaBarcodeScanner.scan()
+                .then(function (barcodeData) {
+                    // Success! Barcode data is here
+                    if (barcodeData.text) {
+                        $ionicLoading.show();
+                        HomeService.checkin({checkin: barcodeData.text})
+                            .then(function (response) {
+                                if (response.status == 'OK') {
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Success! Barcode data is here'
+                                    });
                                 }
-
-                            });
-
-            if(barcode) {
-                $ionicLoading.show();
-                HomeService.checkin({"checkin" : barcode})
-                    .then(function (response) {
-                        $ionicLoading.hide();
-                        if(response.status == constant.OK) {
-                            $ionicPopup.alert({
-                                title: 'Success to login',
-                                template: response
-                            });
-                        }
-                    }).catch(function (response) {
-                        $ionicLoading.hide();
-                        if (response == null || response.statusText == constant.UNAUTHORIZED) {
-                            $state.go('login')
-                        } else {
-                            $ionicPopup.alert({
-                                title: 'Internal server error',
-                                template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
-                            });
-                        }
+                                }, function (response) {
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Internal server error',
+                                        template: response.status
+                                    });
+                                });
+                    }
+                }, function (error) {
+                    // An error occurred
+                    $ionicPopup.alert({
+                        title: 'Internal server error',
+                        template: error
                     });
-            } else {
-                $ionicPopup.alert({
-                    title: 'Error!',
-                    template: "Can't read QR Code. Please try again with valid QR Code"
-                });
-            }
+                }
         }
     });
 

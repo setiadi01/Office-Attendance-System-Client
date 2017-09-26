@@ -117,7 +117,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://192.168.0.168:8000/api/',
+    API_URL : 'http://192.168.0.139:9000/api/',
     OK : 'OK',
     UNAUTHORIZED : 'Unauthorized'
 })
@@ -169,6 +169,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     })
 
     .state('app.home', {
+        cache: false,
         url: '/home',
         cache: false,
         tab: true,
