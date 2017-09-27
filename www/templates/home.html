@@ -18,6 +18,6 @@
       </div>
     </div>
   </div>
-  <button class="check in shadow" ng-click="doScan()" ng-hide="statusabsen === 'I' || statusabsen === 'O'">Check in</button>
-  <button class="check out shadow" ng-click="doScanCheckout()" ng-show="statusabsen === 'I' || statusabsen === 'O'">Check out</button>
+  <button class="check in shadow" ng-click="doScan()" ng-show="statusabsen != 'I'">Check in</button>
+  <button class="check out shadow" ng-click="doScanCheckout()" ng-show="statusabsen === 'I'">Check out</button>
 </ion-content>

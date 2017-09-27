@@ -3,34 +3,14 @@ angular.module('absensiApp')
 .controller('ReportCtrl', function($scope, ReportService, $state, $ionicPopup, $ionicLoading, constant, $ionicScrollDelegate, ionicDatePicker) {
     var ui = $scope;
 
-    function getDisplayDate(date) {
-
-        var result = '';
-
-        if(date) {
-            var monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-
-            var dd = date.getDate();
-            var mm = date.getMonth();
-            var yyyy = date.getFullYear();
-
-            result = dd + " " + monthNames[mm] + ", " + yyyy;
-        }
-
-        return result;
-    }
-
-    ui.dateFrom = getDisplayDate(new Date());
-    ui.dateTo = getDisplayDate(new Date());
+    ui.dateFrom = ui.getDisplayDate(new Date());
+    ui.dateTo = ui.getDisplayDate(new Date());
 
 
     ReportService.getLoggedUser()
     .then(function(response){
         $ionicLoading.hide();
         if(response.status == constant.OK) {
-            ui.name = response.data.full_name;
         } else {
             $state.go('login');
         }
@@ -39,10 +19,7 @@ angular.module('absensiApp')
         if(response==null || response.statusText == constant.UNAUTHORIZED) {
             $state.go('login')
         } else {
-            $ionicPopup.alert({
-                title: 'Internal server error',
-                template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
-            });
+            $scope.internalError({hideLoading : false});
         }
     });
 
@@ -54,7 +31,6 @@ angular.module('absensiApp')
         dateFormat: 'dd MMMM yyyy',
         from: new Date(2015, 1, 1), //Optional
         to: new Date(2018, 11, 31),
-        inputDate: new Date(),      //Optional
         mondayFirst: true,          //Optional
         closeOnSelect: false,       //Optional
         templateType: 'modal',       //Optional
@@ -64,8 +40,9 @@ angular.module('absensiApp')
 
     $scope.openDateFrom = function(){
 
+        optionDate.inputDate = new Date(ui.dateFrom);
         optionDate.callback = function (value) {
-            ui.dateFrom = getDisplayDate(new Date(value));
+            ui.dateFrom = ui.getDisplayDate(new Date(value));
         };
 
         ionicDatePicker.openDatePicker(optionDate);
@@ -73,8 +50,9 @@ angular.module('absensiApp')
 
     $scope.openDateTo = function(){
 
+        optionDate.inputDate = new Date(ui.dateTo);
         optionDate.callback = function (value) {
-            ui.dateTo = getDisplayDate(new Date(value));
+            ui.dateTo = ui.getDisplayDate(new Date(value));
         };
 
         ionicDatePicker.openDatePicker(optionDate);

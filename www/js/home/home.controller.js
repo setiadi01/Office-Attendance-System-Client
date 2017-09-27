@@ -10,8 +10,9 @@ angular.module('absensiApp')
     .then(function(response){
         $ionicLoading.hide();
         if(response.status == constant.OK) {
-            // do something here
-            console.log(response);
+            // set check status
+            localStorage.setItem('checkStatus', response.data.checkStatus);
+            $scope.statusabsen = localStorage.checkStatus;
         } else {
             $state.go('login');
         }
@@ -20,117 +21,117 @@ angular.module('absensiApp')
         if(response==null || response.statusText == constant.UNAUTHORIZED) {
             $state.go('login')
         } else {
-            $ionicPopup.alert({
-                title: 'Internal server error',
-                template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
-            });
+            $scope.internalError({hideLoading : false});
         }
     });
-
-    $scope.getStatusAbsen = function () {
-        HomeService.getStatusAbsen()
-            .then(function (response) {
-                $ionicLoading.hide();
-                if (response.status == constant.OK) {
-                    console.log(response);
-                    localStorage.setItem('status', response.data);
-                }
-            }).catch(function (response) {
-            $ionicLoading.hide();
-            $ionicPopup.alert({
-                title: 'Internal server error',
-                template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
-            });
-        });
-        $rootScope.statusabsen = localStorage.getItem('status');
-    }
-    $scope.getStatusAbsen();
-
 
     $ionicPlatform.ready(function() {
 
         $scope.doScan = function () {
-            $cordovaBarcodeScanner.scan()
-                .then(function (barcodeData) {
-                    // Success! Barcode data is here
-                    if (barcodeData.text) {
-                        $ionicLoading.show();
-                        HomeService.checkin({checkin: barcodeData.text})
-                            .then(function (response) {
-                                if (response.status == 'OK') {
-                                    $scope.getStatusAbsen();
-                                    $ionicLoading.hide();
-                                    $ionicPopup.alert({
-                                        title: 'Success!',
-                                        template: 'Barcode data is here'
-                                    });
-                                }
-                                else {
-                                    $ionicLoading.hide();
-                                    $ionicPopup.alert({
-                                        title: 'Checkout Failed',
-                                        template: 'Try Again'
-                                    });
-                                }
-                            }, function (response) {
-                                $ionicLoading.hide();
-                                $ionicPopup.alert({
-                                    title: 'Internal server error'
-                                });
-                            });
-                    }
-                }, function (error) {
-                    // An error occurred
-                    $ionicPopup.alert({
-                        title: 'Internal server error'
-                    });
-                })
-        }
-        $scope.doScanCheckout = function () {
-            if(localStorage.getItem('status') == 'O'){
+
+            if($scope.statusabsen == constant.CHECK_OUT) {
+
                 $ionicPopup.alert({
-                    title: 'You Have Checked Out'
+                    title: 'Failed to check in',
+                    template: 'You have checked out for today, please do check in again for tomorrow'
                 });
-            }
-            else {
+
+            } else {
+
                 $cordovaBarcodeScanner.scan()
                     .then(function (barcodeData) {
                         // Success! Barcode data is here
                         if (barcodeData.text) {
                             $ionicLoading.show();
-                            HomeService.checkout({checkout: barcodeData.text})
+                            HomeService.checkin({checkin: barcodeData.text})
                                 .then(function (response) {
-                                    if (response.status == 'OK') {
-                                        $scope.getStatusAbsen();
+                                    if (response.status == constant.OK) {
                                         $ionicLoading.hide();
+
+                                        // set check status
+                                        localStorage.setItem('checkStatus', constant.CHECK_IN);
+                                        $scope.statusabsen = localStorage.checkStatus;
+
+                                        var clock = new Date(),
+                                            username = $scope.currentUser.username,
+                                            message = 'Good morning '+username;
+                                        if(clock.getHours() >= 11) {
+                                            message = 'Hello '+username;
+                                        }
+
                                         $ionicPopup.alert({
-                                            title: 'Success! Barcode data is here'
+                                            title: 'Success to check in',
+                                            template: message+'. Keep spirit for today :)'
                                         });
                                     }
                                     else {
                                         $ionicLoading.hide();
                                         $ionicPopup.alert({
-                                            title: 'Checkout Failed',
-                                            template: response.status
+                                            title: 'Failed to check in',
+                                            template: 'Sorry, your check in request failed. Please try again in a moment'
                                         });
                                     }
-
-                                }, function (response) {
-                                    $ionicLoading.hide();
-                                    $ionicPopup.alert({
-                                        title: 'Internal server error',
-                                        template: response.status
-                                    });
-                                });
+                                }).catch(function (error) {
+                                    $scope.internalError();
+                                })
                         }
-                    }, function (error) {
-                        // An error occurred
-                        $ionicPopup.alert({
-                            title: 'Internal server error',
-                            template: error
-                        });
+                    }).catch(function (error) {
+                        $scope.internalError();
                     })
             }
+        }
+        $scope.doScanCheckout = function () {
+            $ionicPopup.confirm({
+                title: 'Check Out now ?',
+                template: 'Check out will end your working hours today',
+                buttons: [{
+                    text: 'Cancel',
+                    type: 'with-border-right',
+                }, {
+                    text: 'Check Out',
+                    type: 'button-positive',
+                    onTap: function (e) {
+                        doCheckout ();
+                    }
+                }]
+            });
+
+        }
+        
+        function doCheckout () {
+            $cordovaBarcodeScanner.scan()
+                .then(function (barcodeData) {
+                    if (barcodeData.text) {
+                        $ionicLoading.show();
+                        HomeService.checkout({checkout: barcodeData.text})
+                            .then(function (response) {
+                                if (response.status == constant.OK) {
+
+                                    // set check status
+                                    localStorage.setItem('checkStatus', constant.CHECK_OUT);
+                                    $scope.statusabsen = localStorage.checkStatus;
+
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Success to check out',
+                                        template: "You have successfully checked out today. See you tomorrow."
+                                    });
+                                }
+                                else {
+                                    $ionicLoading.hide();
+                                    $ionicPopup.alert({
+                                        title: 'Failed to check out',
+                                        template: "Sorry, your check out request failed. Please try again in a moment"
+                                    });
+                                }
+
+                            }).catch(function (error) {
+                            $scope.internalError();
+                        });
+                    }
+                }).catch(function (error) {
+                $scope.internalError();
+            })
         }
     });
 
@@ -144,7 +145,6 @@ angular.module('absensiApp')
         .then(function(response){
             $ionicLoading.hide();
             if(response.status == constant.OK) {
-                ui.name = response.data.full_name;
             } else {
                 $state.go('login');
             }
@@ -153,10 +153,7 @@ angular.module('absensiApp')
             if(response==null || response.statusText == constant.UNAUTHORIZED) {
                 $state.go('login')
             } else {
-                $ionicPopup.alert({
-                    title: 'Internal server error',
-                    template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
-                });
+                $scope.internalError({hideLoading : false});
             }
         });
 

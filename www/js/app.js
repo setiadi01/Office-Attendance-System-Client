@@ -21,33 +21,40 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         });
     });
 
-    $rootScope.loadImg = function(image) {
-        if (image) {
-            $http.get(constant.API_URL + 'images/' + image, {
-                responseType: 'arraybuffer'
-            })
-            .then(function (response) {
-                var imageBlob = new Blob([response.data], {type: response.headers('Content-Type')});
-                $rootScope.profilePicture = (window.URL || window.webkitURL).createObjectURL(imageBlob);
-            }).catch(function (response) {
-                $ionicPopup.alert({
-                    title: 'Internal server error',
-                    template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
-                });
-            });
-        } else {
-            $rootScope.profilePicture = '';
+    /**
+     * Prepare rootscope variable bellow
+     */
+    $rootScope.tab = false;
+
+    /**
+     * End prepare rootscope variable
+     */
+
+    /**
+     * Prepare all global function bellow
+     */
+
+    // get display date
+    $rootScope.getDisplayDate = function(date) {
+
+        var result = '';
+
+        if(date) {
+            var monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            var dd = date.getDate();
+            var mm = date.getMonth();
+            var yyyy = date.getFullYear();
+
+            result = dd + " " + monthNames[mm] + ", " + yyyy;
         }
+
+        return result;
     };
 
-    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
-    if($rootScope.currentUser) {
-        $rootScope.loadImg($rootScope.currentUser.profile_picture);
-    }
-
-    $rootScope.tab = false;
-    $rootScope.customCss = '';
-
+    // Logout
     $rootScope.logout = function(){
         $ionicPopup.confirm({
             title: 'Log Out of ABSEN ?',
@@ -75,9 +82,51 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         });
     }
 
+    // show popup error internal
+    $rootScope.internalError = function (param) {
+
+        if(param && !param.hideLoading) {
+            $ionicLoading.hide();
+        }
+        $ionicPopup.alert({
+            title: 'Internal server error',
+            template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
+        });
+    };
+
+    // force enter to login username
     $rootScope.addNewAccount = function(){
         $rootScope.forceToLogin = true;
         $location.path('/login');
+    }
+
+    // Load image
+    $rootScope.loadImg = function(image) {
+        if (image) {
+            $http.get(constant.API_URL + 'images/' + image, {
+                responseType: 'arraybuffer'
+            })
+            .then(function (response) {
+                var imageBlob = new Blob([response.data], {type: response.headers('Content-Type')});
+                $rootScope.profilePicture = (window.URL || window.webkitURL).createObjectURL(imageBlob);
+            }).catch(function (response) {
+                $ionicPopup.alert({
+                    title: 'Internal server error',
+                    template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
+                });
+            });
+        } else {
+            $rootScope.profilePicture = '';
+        }
+    };
+
+    /**
+     * End prepare all global function
+     */
+
+    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
+    if($rootScope.currentUser) {
+        $rootScope.loadImg($rootScope.currentUser.profile_picture);
     }
 
     $rootScope.$on('$stateChangeSuccess',
@@ -101,10 +150,6 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
                 $rootScope.page = '';
             }
 
-            $rootScope.tick = function() {
-                $rootScope.clock = Date.now() // get the current time
-            }
-
             var updateClock = function () {
                 $rootScope.clock = new Date();
             };
@@ -117,9 +162,11 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://192.168.0.139:9000/api/',
+    API_URL : 'http://192.168.0.168:8000/api/',
     OK : 'OK',
-    UNAUTHORIZED : 'Unauthorized'
+    UNAUTHORIZED : 'Unauthorized',
+    CHECK_IN : 'I',
+    CHECK_OUT : 'O'
 })
 .config(function($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $ionicConfigProvider, constant) {
 
@@ -169,7 +216,6 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     })
 
     .state('app.home', {
-        cache: false,
         url: '/home',
         cache: false,
         tab: true,

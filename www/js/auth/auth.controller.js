@@ -152,11 +152,7 @@ angular.module('absensiApp')
 				}
 			})
 			.catch(function(response) {
-				$ionicLoading.hide();
-                $ionicPopup.alert({
-                    title: 'Internal server error',
-                    template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
-                });
+                $scope.internalError();
 			});
 	}
 })

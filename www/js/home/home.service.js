@@ -2,7 +2,7 @@ angular.module('absensiApp')
 .service('HomeService', HomeService)
 .service('RecentService', RecentService);
 
-function HomeService($http, constant){
+function HomeService($http, constant, $httpParamSerializer){
 	return {
 		getLoggedUser : function(){
 			return $http.get(constant.API_URL+'get-logged-user')
@@ -21,17 +21,23 @@ function HomeService($http, constant){
         },
 
 		checkin : function(input){
-            return $http.post(constant.API_URL+'checkin', input)
-                .then(function(response){
+            return $http({
+                url: constant.API_URL+'checkin',
+                method: "POST",
+                params: input
+            }).then(function(response){
                     return response.data;
-                })
+            })
 
         },
         checkout : function(input){
-            return $http.post(constant.API_URL+'checkout', input)
-                .then(function(response){
-                    return response.data;
-                })
+            return $http({
+                url: constant.API_URL+'checkout',
+                method: "POST",
+                params: input
+            }).then(function(response){
+                return response.data;
+            })
 
         },
 	}
