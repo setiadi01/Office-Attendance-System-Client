@@ -1,6 +1,8 @@
 angular.module('absensiApp')
 
 .controller('AuthUserCtrl', function($scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $window, $ionicHistory, $ionicPlatform) {
+    var ui = $scope;
+
 	if($window.localStorage !=null && $window.localStorage.user_lists !=null && $window.localStorage.user_lists != '{}' && !$rootScope.forceToLogin) {
 
         $state.go('login-recent');
@@ -13,14 +15,16 @@ angular.module('absensiApp')
         });
 	}
 
-	var ui = $scope;
     ui.login = function(username){
 		$state.go('login-password', {username: username});
-		
     }
 })
 
 .controller('AuthRecentUserCtrl', function(AuthService, $scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $window, $ionicHistory) {
+
+    if(!$window.localStorage.user_lists) {
+        $state.go('login');
+	}
 
 	var userJsonList = JSON.parse($window.localStorage.user_lists);
     generateUserList(userJsonList);
@@ -59,16 +63,13 @@ angular.module('absensiApp')
 })
 
 .controller('AuthPassCtrl', function($scope, $ionicLoading, $auth, $ionicPopup, $state, $stateParams, $http, $ionicPopup, AuthService, $ionicHistory, constant) {
-	$scope.showPasswordIsChecked = false;
-	$scope.username = localStorage.getItem('username');
-	$scope.close = function () {
-		$scope.error = false;
-	}
 
 	$ionicLoading.show();
 
 	var ui = $scope;
 	ui.ImageUrl = '';
+    ui.showPasswordIsChecked = false;
+
 	var username = $stateParams.username;
 
 	if(!username) {
@@ -78,7 +79,6 @@ angular.module('absensiApp')
 	AuthService.getProfilePicture(username)
 	.then(function(response){
 		$ionicLoading.hide();
-		//ui.pic = response.data;
 		if (response.data == null) {
 			ui.profilePicture = ''
 		}else{
@@ -108,21 +108,22 @@ angular.module('absensiApp')
 			.then(function(response) {
 				if (response.data.status == constant.OK) {
 
+					// Set data user to local storage
                     localStorage.setItem('user', JSON.stringify(response.data.user));
 
-                    var currentUser = response.data.user;
-					var userJson = {};
-                    userJson[username] = {"username" : currentUser.username, "fullname" : currentUser.full_name, "profilePicture" : $scope.profilePicture, "pictureName" : currentUser.profilePicture};
+                    var currentUser = response.data.user,
+						userJson = {};
 
+                    userJson[username] = {"username" : currentUser.username, "fullName" : currentUser.full_name, "pictureName" : currentUser.profile_picture};
+
+                    // add to local storage user_list
                     if(localStorage!=null && localStorage.user_lists !=null) {
-
                     	var currentList = JSON.parse(localStorage.user_lists);
-                        currentList[username] = {"username" : currentUser.username, "fullname" : currentUser.full_name, "profilePicture" : $scope.profilePicture, "pictureName" : currentUser.profilePicture};
-
+                        currentList[username] = {"username" : currentUser.username, "fullName" : currentUser.full_name, "pictureName" : currentUser.profile_picture};
                         localStorage.setItem('user_lists', JSON.stringify(currentList));
-
                     }
 
+					// set to local storage user_list
 					else {
                         localStorage.setItem('user_lists', JSON.stringify(userJson));
                     }
@@ -144,7 +145,6 @@ angular.module('absensiApp')
                             text: 'Not '+username,
                             type: 'button-positive',
                             onTap: function (e) {
-                                $scope.username = '';
                                 $state.go('login');
                             }
                         }]

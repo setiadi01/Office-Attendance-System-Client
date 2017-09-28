@@ -120,23 +120,51 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         }
     };
 
+    // get logged user
+    $rootScope.loadCurrentUser = function () {
+        $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
+
+        // set image user, if data is exists
+        if($rootScope.currentUser) {
+            $rootScope.loadImg($rootScope.currentUser.profile_picture);
+        }
+    };
+
+    // val logged user
+    $rootScope.valLoggedUser = function () {
+        $ionicLoading.show();
+        $http.get(constant.API_URL+'get-logged-user')
+            .then(function(response){
+                $ionicLoading.hide();
+                if(response.data.status == constant.OK) {
+                    // Set data user to local storage
+                    localStorage.setItem('user', JSON.stringify(response.data.data));
+
+                    // set check status
+                    localStorage.setItem('checkStatus', response.data.checkStatus);
+                    $rootScope.statusabsen = localStorage.checkStatus;
+
+                    // load current status
+                    $rootScope.loadCurrentUser();
+                } else {
+                    $location.path('login');
+                }
+            }).catch(function(response){
+            $ionicLoading.hide();
+            if(response==null || response.statusText == constant.UNAUTHORIZED) {
+                $location.path('login')
+            } else {
+                $rootScope.internalError({hideLoading : false});
+            }
+        });
+    };
+
     /**
      * End prepare all global function
      */
 
-    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
-    if($rootScope.currentUser) {
-        $rootScope.loadImg($rootScope.currentUser.profile_picture);
-    }
-
     $rootScope.$on('$stateChangeSuccess',
         function(event, toState, toParams, fromState, fromParams) {
-
-            if(toState.cssFileName) {
-                $rootScope.customCss = 'css/'+toState.cssFileName;
-            } else {
-                $rootScope.customCss = '';
-            }
 
             if(toState.tab) {
                 $rootScope.tab = toState.tab;
@@ -162,7 +190,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://192.168.0.139:9000/api/',
+    API_URL : 'http://192.168.0.168:8000/api/',
     OK : 'OK',
     UNAUTHORIZED : 'Unauthorized',
     CHECK_IN : 'I',
@@ -190,22 +218,19 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     .state('login', {
         url: '/login',
         templateUrl: 'templates/login.html',
-        controller: 'AuthUserCtrl',
-        cssFileName : 'login.css'
+        controller: 'AuthUserCtrl'
     })
 
     .state('login-recent', {
         url: '/login-recent',
         templateUrl: 'templates/login-recent-account.html',
-        controller: 'AuthRecentUserCtrl',
-        cssFileName : 'login.css'
+        controller: 'AuthRecentUserCtrl'
     })
 
     .state('login-password', {
         url: '/login-password/:username',
         templateUrl: 'templates/login-password.html',
-        controller: 'AuthPassCtrl',
-        cssFileName : 'login.css'
+        controller: 'AuthPassCtrl'
     })
 
     .state('app', {

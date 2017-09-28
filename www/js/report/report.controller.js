@@ -1,27 +1,13 @@
 angular.module('absensiApp')
 
 .controller('ReportCtrl', function($scope, ReportService, $state, $ionicPopup, $ionicLoading, constant, $ionicScrollDelegate, ionicDatePicker) {
+    // load logged user, if user not authorized, page will redirect to login
+    $scope.valLoggedUser();
+
     var ui = $scope;
 
     ui.dateFrom = ui.getDisplayDate(new Date());
     ui.dateTo = ui.getDisplayDate(new Date());
-
-
-    ReportService.getLoggedUser()
-    .then(function(response){
-        $ionicLoading.hide();
-        if(response.status == constant.OK) {
-        } else {
-            $state.go('login');
-        }
-    }).catch(function(response){
-        $ionicLoading.hide();
-        if(response==null || response.statusText == constant.UNAUTHORIZED) {
-            $state.go('login')
-        } else {
-            $scope.internalError({hideLoading : false});
-        }
-    });
 
     var optionDate = {
         titleLabel: 'Select Date From',
@@ -29,11 +15,11 @@ angular.module('absensiApp')
         todayLabel: 'Today',
         closeLabel: 'Close',
         dateFormat: 'dd MMMM yyyy',
-        from: new Date(2015, 1, 1), //Optional
+        from: new Date(2015, 1, 1),
         to: new Date(2018, 11, 31),
-        mondayFirst: true,          //Optional
-        closeOnSelect: false,       //Optional
-        templateType: 'modal',       //Optional
+        mondayFirst: true,
+        closeOnSelect: false,
+        templateType: 'modal',
         showTodayButton: true,
         disableWeekdays: []
     };

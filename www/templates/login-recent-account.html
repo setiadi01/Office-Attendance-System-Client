@@ -7,7 +7,7 @@
             <div class="group-item" ng-repeat="user in userLists">
                 <a class="item" href="#/login-password/{{user.username}}">
                     <div class="person recent {{!user.profilePicture?'no-img':''}}" style="{{user.profilePicture?'background: url('+user.profilePicture+')':''}}"></div>
-                    <label>{{user.fullname}}</label>
+                    <label>{{user.fullName}}</label>
                 </a>
                 <div class="remove-recent-account ion-close-circled" ng-click="removeAccount(user.username)"></div>
             </div>

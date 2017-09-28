@@ -1,24 +1,8 @@
 angular.module('absensiApp')
 
 .controller('NotificationsCtrl', function($scope, NotificationsService, $ionicScrollDelegate, $state, $ionicLoading, $ionicPopup, constant) {
-    var ui = $scope;
-
-    $ionicLoading.show();
-    NotificationsService.getLoggedUser()
-        .then(function(response){
-            $ionicLoading.hide();
-            if(response.status == constant.OK) {
-            } else {
-                $state.go('login');
-            }
-        }).catch(function(response){
-            $ionicLoading.hide();
-            if(response==null || response.statusText == constant.UNAUTHORIZED) {
-                $state.go('login')
-            } else {
-                $scope.internalError({hideLoading : false});
-            }
-        });
+    // load logged user, if user not authorized, page will redirect to login
+    $scope.valLoggedUser();
 
     $scope.scrollSmallToTop = function() {
         $ionicScrollDelegate.$getByHandle('top-content-notification').scrollTop(true);

@@ -3,22 +3,23 @@
 </div>
 <ion-content class="padding page">
 
-  <form class="edit-profile" name="edit-profile-form">
+  <form class="edit-profile" name="editProfileForm" ng-submit="saveProfile(fullName, userName)">
   <div class="row row-center">
     <div class="col col-center text-center">
         <div class="head">
             <div class="person edit-profile {{!profilePicture?'no-img':''}}" style="{{profilePicture?'background: url('+profilePicture+')':''}}"></div>
-
-            <input type="file" accept="image/*"  capture="camera" id="change-photo">
-            <label for="change-photo" class="change-photo">Change photo</label>
+            <br />
+            <input type="file" accept="image/*"  capture="camera" id="change-photo" class="hide">
+            <label for="change-photo" class="change-photo hide">Change photo</label>
         </div>
         <div class="content">
             <div class="primary-long-input">
                 <i class="icon ion-card"></i>
-                <input class="line" type="text" placeholder="Your name" name="yourName" ng-model="yourName" required>
+                <input class="line" type="text" placeholder="Your name" name="fullName" ng-model="fullName" required>
             </div>
             <div class="primary-long-input">
                 <i class="icon ion-person"></i>
+                <!--<input class="line {{editProfileForm.$error.usernameExists?'':'wrong'}}" type="text" placeholder="Username" name="userName" ng-model="userName" required username-available ng-model-options="{ getterSetter: true }">-->
                 <input class="line" type="text" placeholder="Username" name="userName" ng-model="userName" required>
             </div>
             <div class="primary-long-input">
@@ -31,7 +32,7 @@
             </div>
         </div>
         <div class="footer">
-            <button type="submit" class="primary-long-btn" ng-disabled="!yourName || !userName">Save</button>
+            <button type="submit" class="primary-long-btn" ng-disabled="!fullName || !userName">Save</button>
         </div>
     </div>
   </div>

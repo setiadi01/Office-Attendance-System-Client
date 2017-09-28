@@ -1,32 +1,12 @@
 angular.module('absensiApp')
 
-.controller('HomeCtrl', function($ionicPlatform, $scope, $rootScope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner, $cordovaStatusbar) {
-
-    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
-    $scope.loadImg($rootScope.currentUser.profile_picture);
-
-    $ionicLoading.show();
-    HomeService.getLoggedUser()
-    .then(function(response){
-        $ionicLoading.hide();
-        if(response.status == constant.OK) {
-            // set check status
-            localStorage.setItem('checkStatus', response.data.checkStatus);
-            $scope.statusabsen = localStorage.checkStatus;
-        } else {
-            $state.go('login');
-        }
-    }).catch(function(response){
-        $ionicLoading.hide();
-        if(response==null || response.statusText == constant.UNAUTHORIZED) {
-            $state.go('login')
-        } else {
-            $scope.internalError({hideLoading : false});
-        }
-    });
+.controller('HomeCtrl', function($ionicPlatform, $scope, $rootScope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner) {
+    // load logged user, if user not authorized, page will redirect to login
+    $scope.valLoggedUser();
 
     $ionicPlatform.ready(function() {
 
+        // Check in
         $scope.doScan = function () {
 
             if($scope.statusabsen == constant.CHECK_OUT) {
@@ -80,6 +60,8 @@ angular.module('absensiApp')
                     })
             }
         }
+
+        // Check out
         $scope.doScanCheckout = function () {
             $ionicPopup.confirm({
                 title: 'Check Out now ?',
@@ -97,7 +79,8 @@ angular.module('absensiApp')
             });
 
         }
-        
+
+        // Checkout function
         function doCheckout () {
             $cordovaBarcodeScanner.scan()
                 .then(function (barcodeData) {
@@ -137,25 +120,9 @@ angular.module('absensiApp')
 
 })
 
-.controller('RecentCtrl', function($scope, RecentService, $ionicScrollDelegate, $state, $ionicLoading, $ionicPopup, constant) {
-    var ui = $scope;
-
-    $ionicLoading.show();
-    RecentService.getLoggedUser()
-        .then(function(response){
-            $ionicLoading.hide();
-            if(response.status == constant.OK) {
-            } else {
-                $state.go('login');
-            }
-        }).catch(function(response){
-            $ionicLoading.hide();
-            if(response==null || response.statusText == constant.UNAUTHORIZED) {
-                $state.go('login')
-            } else {
-                $scope.internalError({hideLoading : false});
-            }
-        });
+.controller('RecentCtrl', function($scope, RecentService, $ionicScrollDelegate) {
+    // load logged user, if user not authorized, page will redirect to login
+    $scope.valLoggedUser();
 
     $scope.scrollSmallToTop = function() {
         $ionicScrollDelegate.$getByHandle('top-content').scrollTop(true);

@@ -249,6 +249,8 @@ div.popup-container.popup-showing.active > .popup {
 
 
 .primary-long-input {
+    margin: auto;
+    width: 90%;
     margin-bottom: 10px;
 }
 
@@ -259,9 +261,8 @@ div.popup-container.popup-showing.active > .popup {
 .primary-long-input input {
     background: #ffffff;
     font-size: 20px;
-    width: 90%;
+    width: 100%;
     text-align: left;
-    padding: 0;
     padding: 30px 30px 30px 60px;
     border-left: 7px solid #ffffff;
     border-radius: 6px;
@@ -276,11 +277,12 @@ div.popup-container.popup-showing.active > .popup {
 }
 
 .primary-long-input i{
-    float: left;
+    position: absolute;
     width: 35px;
-    color:  #757272;
+    color: #757272;
     font-size: 25px;
-    margin: 15px -14% 0 9%
+    left: 9%;
+    margin-top: 17px;
 }
 
 .primary-long-input input.wrong:focus {

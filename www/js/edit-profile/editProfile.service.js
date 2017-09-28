@@ -3,11 +3,22 @@ angular.module('absensiApp')
 
 function EditProfileService($http, constant){
     return {
-        getLoggedUser : function(){
-            return $http.get(constant.API_URL+'get-logged-user')
-                .then(function(response){
-                    return response.data;
-                });
+        loadUserForEditProfile : function(input){
+            return $http.get(constant.API_URL+'get-info-edit-profile')
+                    .then(function(response){
+                        return response.data;
+                    })
+
+        },
+        doEditProfile : function(input){
+            return $http({
+                        url: constant.API_URL+'edit-profile',
+                        method: "POST",
+                        params: input
+                    }).then(function(response){
+                        return response.data;
+                    })
+
         }
     }
 }
