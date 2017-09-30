@@ -73,8 +73,6 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     // get formatted date
     $rootScope.getFormattedDate = function(date) {
 
-        console.log(date);
-
         var result = '';
 
         if(date) {
@@ -82,11 +80,6 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             var dd = ("0" + date.getDate()).slice(-2);
             var mm = ("0" + (date.getMonth() + 1)).slice(-2);
             var yyyy = date.getFullYear();
-
-            console.log(dd);
-            console.log(mm);
-            console.log(yyyy);
-
 
             result = yyyy+""+mm+""+dd;
         }

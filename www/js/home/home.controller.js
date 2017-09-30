@@ -12,7 +12,6 @@ angular.module('absensiApp')
     .then(function (response) {
         $ionicLoading.hide();
         if (response.status == constant.OK) {
-            console.log(response);
             ui.workingHours = response.workingHours;
             ui.lateToCheckIn = response.lateToCheckIn;
             ui.bestCheckIn = response.bestCheckIn;

@@ -53,7 +53,7 @@ angular.module('absensiApp')
         var input = {
             startDate: ui.getFormattedDate(dateFrom),
             endDate: ui.getFormattedDate(dateTo),
-            username: 'oki',
+            username: ui.currentUser.username,
             limit: 5,
             offset: 0
         };
@@ -61,7 +61,6 @@ angular.module('absensiApp')
             .then(function (response) {
                 $ionicLoading.hide();
                 if (response.status == constant.OK) {
-                    console.log(JSON.stringify(response));
                     ui.checkIn = response.checkIn;
                     ui.notCheckIn = response.notCheckIn;
                     ui.lateToCheckIn = response.lateToCheckIn;
