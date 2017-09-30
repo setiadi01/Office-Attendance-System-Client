@@ -1,5 +1,23 @@
 angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying', 'ngCordova', 'ionic-datepicker'])
-.run(function($ionicPlatform, $rootScope, $window, $location, $http, constant, $ionicLoading, $ionicPopup, $cordovaStatusbar, $ionicHistory) {
+.run(function($ionicPlatform, $rootScope, $window, $state, $location, $http, constant, $ionicLoading, $ionicPopup, $cordovaStatusbar, $ionicHistory) {
+
+    // splash screen
+    $rootScope.$on('$ionicView.afterEnter', function(){
+        setTimeout(function(){
+            document.getElementById("custom-overlay").style.display = "none";
+        }, 2000);
+    });
+
+    // handle back button
+    $ionicPlatform.registerBackButtonAction(function (event) {
+        if($state.current.name=="app.home" || $state.current.name=="login-recent" || ($state.current.name=="login" && (!localStorage.user_lists || localStorage.user_lists=='{}'))){
+            navigator.app.exitApp();
+        }
+        else {
+            navigator.app.backHistory();
+        }
+    }, 100);
+
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -12,13 +30,11 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             StatusBar.styleDefault();
         }
 
-        $ionicPlatform.ready(function() {
+        // change color statusbar
+        $cordovaStatusbar.overlaysWebView(false);
+        $cordovaStatusbar.style(1);
+        $cordovaStatusbar.styleHex('#2c3b51');
 
-            $cordovaStatusbar.overlaysWebView(false);
-            $cordovaStatusbar.style(1);
-            $cordovaStatusbar.styleHex('#2c3b51');
-
-        });
     });
 
     /**
@@ -49,6 +65,30 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             var yyyy = date.getFullYear();
 
             result = dd + " " + monthNames[mm] + ", " + yyyy;
+        }
+
+        return result;
+    };
+
+    // get formatted date
+    $rootScope.getFormattedDate = function(date) {
+
+        console.log(date);
+
+        var result = '';
+
+        if(date) {
+
+            var dd = ("0" + date.getDate()).slice(-2);
+            var mm = ("0" + (date.getMonth() + 1)).slice(-2);
+            var yyyy = date.getFullYear();
+
+            console.log(dd);
+            console.log(mm);
+            console.log(yyyy);
+
+
+            result = yyyy+""+mm+""+dd;
         }
 
         return result;
@@ -85,7 +125,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     // show popup error internal
     $rootScope.internalError = function (param) {
 
-        if(param && !param.hideLoading) {
+        if(!param || (param && param.hideLoading)) {
             $ionicLoading.hide();
         }
         $ionicPopup.alert({
@@ -132,7 +172,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
     // val logged user
     $rootScope.valLoggedUser = function () {
-        $ionicLoading.show();
+        $rootScope.absenLoading();
         $http.get(constant.API_URL+'get-logged-user')
             .then(function(response){
                 $ionicLoading.hide();
@@ -147,17 +187,50 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
                     // load current status
                     $rootScope.loadCurrentUser();
                 } else {
-                    $location.path('login');
+
+                    if(localStorage && localStorage.user_lists) {
+                        $location.path('login-recent');
+                        $ionicHistory.nextViewOptions({
+                            disableBack: true,
+                            historyRoot: true
+                        });
+                    } else {
+                        $location.path('login');
+                        $ionicHistory.nextViewOptions({
+                            disableBack: true,
+                            historyRoot: true
+                        });
+                    }
                 }
             }).catch(function(response){
             $ionicLoading.hide();
             if(response==null || response.statusText == constant.UNAUTHORIZED) {
-                $location.path('login')
+                if(localStorage && localStorage.user_lists) {
+                    $location.path('login-recent');
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true,
+                        historyRoot: true
+                    });
+                } else {
+                    $location.path('login');
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true,
+                        historyRoot: true
+                    });
+                }
             } else {
                 $rootScope.internalError({hideLoading : false});
             }
         });
     };
+
+    $rootScope.absenLoading = function () {
+        $ionicLoading.show(
+            {
+                templateUrl : 'loading.html'
+            }
+        );
+    }
 
     /**
      * End prepare all global function

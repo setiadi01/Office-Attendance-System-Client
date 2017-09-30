@@ -5,11 +5,14 @@ angular.module('absensiApp')
     $scope.valLoggedUser();
 
     var ui = $scope;
+    ui.fullName = ui.currentUser.full_name;
+    ui.userName = ui.currentUser.username;
+    ui.phoneNumber = ui.currentUser.phone_number;
+    ui.emailAddress = ui.currentUser.email;
 
-    $ionicLoading.show();
+    $scope.absenLoading();
     EditProfileService.loadUserForEditProfile()
     .then(function (response) {
-        console.log(response);
         $ionicLoading.hide();
         if (response.status == constant.OK) {
             ui.fullName = response.data.full_name;
@@ -26,11 +29,10 @@ angular.module('absensiApp')
     
     $scope.saveProfile = function (fullName, username) {
 
-        // $ionicLoading.show();
-
-        var input = {};
-        input.fullName = fullName;
-        input.username = username;
+        var input = {
+            fullName: fullName,
+            username: username
+        };
 
         console.log(input);
 
@@ -57,6 +59,7 @@ angular.module('absensiApp')
 
                     $ionicPopup.alert({
                         title: 'Success',
+                        cssClass: 'success',
                         template: 'Your profile has been successfully updated'
                     });
                 }

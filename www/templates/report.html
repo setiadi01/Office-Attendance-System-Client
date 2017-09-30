@@ -2,132 +2,50 @@
     <h2 class="title">Report</h2>
 </div>
 <ion-content class="padding page" on-scroll="gotScrolled()" delegate-handle="top-content-report">
+
+
+    <div class="filter-report">
+        <button type="button" class="date-picker date-from" ng-click="openDateFrom()">
+            <label class="icon ion-calendar"></label>
+            {{dateFrom}}
+        </button>
+        <button type="button" class="date-picker date-to" ng-click="openDateTo()">
+            <label class="icon ion-calendar"></label>
+            {{dateTo}}
+        </button>
+    </div>
+    <div class="summary-report">
+        <div class="box-4 total-check-in">
+            <p>{{checkIn}}</p>
+            <label>Total</label>
+            <label>check in</label>
+        </div>
+        <div class="box-4 late-to-check-in">
+            <p>{{lateToCheckIn}}</p>
+            <label>Late to</label>
+            <label>check in</label>
+        </div>
+        <div class="box-4 not-check-in">
+            <p>{{notCheckIn}}</p>
+            <label>Not</label>
+            <label>check in</label>
+        </div>
+        <div class="box-4 working-hours">
+            <p>{{workingHours}}</p>
+            <label>Working</label>
+            <label>hours</label>
+        </div>
+    </div>
     <div class="list">
 
-        <div class="filter-report">
-            <button type="button" class="date-picker date-from" ng-click="openDateFrom()">
-                <label class="icon ion-calendar"></label>
-                {{dateFrom}}
-            </button>
-            <button type="button" class="date-picker date-to" ng-click="openDateTo()">
-                <label class="icon ion-calendar"></label>
-                {{dateTo}}
-            </button>
-        </div>
-
-        <div class="summary-report">
-            <div class="box-4 total-check-in">
-                <p>20</p>
-                <label>Total</label>
-                <label>check in</label>
-            </div>
-            <div class="box-4 late-to-check-in">
-                <p>5</p>
-                <label>Late to</label>
-                <label>check in</label>
-            </div>
-            <div class="box-4 not-check-in">
-                <p>3</p>
-                <label>Not</label>
-                <label>check in</label>
-            </div>
-            <div class="box-4 working-hours">
-                <p>50</p>
-                <label>Working</label>
-                <label>hours</label>
-            </div>
-        </div>
-
-
-        <a class="item item-thumbnail-left group-report" href="#">
+        <a class="item item-thumbnail-left group-report" ng-repeat="report in reportList">
             <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
+                <label>{{report.checkin_month}}</label>
+                <p>{{report.checkin_date}}</p>
+                <span>{{report.checkin_day}}</span>
             </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
-        </a>
-        <a class="item item-thumbnail-left group-report" href="#">
-            <div class="calender">
-                <label>Agust</label>
-                <p>10</p>
-                <span>Monday</span>
-            </div>
-            <h2>Oki Karso Aji</h2>
-            <p>08.20 <span>to</span> 20.30</p>
+            <h2>{{report.full_name}}</h2>
+            <p>{{report.checkin_hours}} <span>to</span> {{report.checkout_hours}}</p>
         </a>
 
 

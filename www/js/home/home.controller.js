@@ -1,8 +1,24 @@
 angular.module('absensiApp')
 
 .controller('HomeCtrl', function($ionicPlatform, $scope, $rootScope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner) {
+
+    var ui = $scope;
+
     // load logged user, if user not authorized, page will redirect to login
     $scope.valLoggedUser();
+
+    // load summary
+    HomeService.getSummaryWeekly()
+    .then(function (response) {
+        $ionicLoading.hide();
+        if (response.status == constant.OK) {
+            console.log(response);
+            ui.workingHours = response.workingHours;
+            ui.lateToCheckIn = response.lateToCheckIn;
+            ui.bestCheckIn = response.bestCheckIn;
+
+        }
+    });
 
     $ionicPlatform.ready(function() {
 
@@ -22,7 +38,7 @@ angular.module('absensiApp')
                     .then(function (barcodeData) {
                         // Success! Barcode data is here
                         if (barcodeData.text) {
-                            $ionicLoading.show();
+                            $scope.absenLoading();
                             HomeService.checkin({checkin: barcodeData.text})
                                 .then(function (response) {
                                     if (response.status == constant.OK) {
@@ -41,6 +57,7 @@ angular.module('absensiApp')
 
                                         $ionicPopup.alert({
                                             title: 'Success to check in',
+                                            cssClass: 'success',
                                             template: message+'. Keep spirit for today :)'
                                         });
                                     }
@@ -85,7 +102,7 @@ angular.module('absensiApp')
             $cordovaBarcodeScanner.scan()
                 .then(function (barcodeData) {
                     if (barcodeData.text) {
-                        $ionicLoading.show();
+                        $scope.absenLoading();
                         HomeService.checkout({checkout: barcodeData.text})
                             .then(function (response) {
                                 if (response.status == constant.OK) {
@@ -97,6 +114,7 @@ angular.module('absensiApp')
                                     $ionicLoading.hide();
                                     $ionicPopup.alert({
                                         title: 'Success to check out',
+                                        cssClass: 'success',
                                         template: "You have successfully checked out today. See you tomorrow."
                                     });
                                 }

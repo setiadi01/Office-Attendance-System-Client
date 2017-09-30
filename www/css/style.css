@@ -157,7 +157,7 @@ div.popup-container.popup-showing.active > .popup {
 }
 
 .popup > .popup-head, .popup > .popup-body{
-    padding: 15px 15px;
+    padding: 12px 15px;
 }
 
 .popup > .popup-head, .popup > .popup-body, .popup > .popup-buttons{
@@ -169,11 +169,15 @@ div.popup-container.popup-showing.active > .popup {
     border-bottom: 2.5px solid #b7b7b7;
 }
 
-.popup > .popup-head > .popup-title {
+.popup-container > .popup > .popup-head > .popup-title {
     color: #b9293d;
     font-size: 25px;
     text-align: left;
     font-weight: bold;
+}
+
+.popup-container.success > .popup > .popup-head > .popup-title {
+    color: #009595;
 }
 
 .popup > .popup-body span {
@@ -184,6 +188,7 @@ div.popup-container.popup-showing.active > .popup {
 .popup > .popup-buttons {
     border-radius: 0 0 10px 10px;
     border-top: .5px solid #b7b7b7;
+    padding: 2px;
 }
 
 .popup > .popup-buttons button, .popup > .popup-buttons button.activated, .popup > .popup-buttons button:hover {
@@ -205,43 +210,61 @@ div.popup-container.popup-showing.active > .popup {
 
 /** LOADING SPINNER
  */
-.loading .spinner.spinner-android, .loading-container .loading  .spinner.spinner-android {
-    display: none;
-    visibility: hidden;
+.backdrop {
+    background-color: rgba(255, 255, 255, 0.5);
 }
-.loading, .loading-container .loading {
-    height: 60px;
-    width: 60px;
-    border-radius: 50%;
+
+.loading-container .loading{
+    background: none;
+}
+
+.loading {
+    margin: 100px auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    text-align: center;
+
+    -webkit-animation: sk-rotate 2.0s infinite linear;
+    animation: sk-rotate 2.0s infinite linear;
+}
+
+.loading .dot1, .loading .dot2 {
+    width: 60%;
+    height: 60%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
     background-color: #009595;
-    -webkit-animation: loading 1s infinite ease-in;
-    animation: loading 1s infinite ease-in;
+    border-radius: 100%;
+
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
 }
 
-@-webkit-keyframes loading {
-    0% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-        opacity: 1;
-    }
-    100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        opacity: 0;
-    }
+.loading .dot2 {
+    top: auto;
+    bottom: 0;
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
 }
 
-@keyframes loading {
-    0% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-        opacity: 1;
-    }
-    100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        opacity: 0;
-    }
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+    0%, 100% { -webkit-transform: scale(0.0) }
+    50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+    0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    } 50% {
+          transform: scale(1.0);
+          -webkit-transform: scale(1.0);
+      }
 }
 /** END LOADING SPINNER
  */

@@ -8,6 +8,16 @@ function ChangePasswordService($http, constant){
                 .then(function(response){
                     return response.data;
                 });
+        },
+        changePassword : function(input){
+            return $http({
+                url : constant.API_URL+'change-password',
+                method: "POST",
+                params: input
+            })
+            .then(function(response){
+                return response.data;
+            });
         }
     }
 }

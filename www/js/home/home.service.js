@@ -23,6 +23,13 @@ function HomeService($http, constant, $httpParamSerializer){
                 return response.data;
             })
 
+        },
+        getSummaryWeekly : function(){
+            return $http.get(constant.API_URL+'get-summary-weekly')
+                .then(function(response){
+                    return response.data;
+                })
+
         }
 	}
 }

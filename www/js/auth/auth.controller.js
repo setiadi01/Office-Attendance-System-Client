@@ -1,32 +1,23 @@
 angular.module('absensiApp')
 
-.controller('AuthUserCtrl', function($scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $window, $ionicHistory, $ionicPlatform) {
-    var ui = $scope;
-
-	if($window.localStorage !=null && $window.localStorage.user_lists !=null && $window.localStorage.user_lists != '{}' && !$rootScope.forceToLogin) {
-
-        $state.go('login-recent');
-
-	}
-
-	if($rootScope.forceToLogin){
-        $ionicPlatform.onHardwareBackButton(function() {
-            $state.go('login-recent');
-        });
-	}
-
-    ui.login = function(username){
+.controller('AuthUserCtrl', function($scope, $state) {
+    $scope.login = function(username){
 		$state.go('login-password', {username: username});
     }
 })
 
-.controller('AuthRecentUserCtrl', function(AuthService, $scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $window, $ionicHistory) {
+.controller('AuthRecentUserCtrl', function(AuthService, $scope, $rootScope, $auth, $ionicPopup, $state, $http, constant, $ionicHistory) {
 
-    if(!$window.localStorage.user_lists) {
+	// Jika sudah tidak ada lagi list user, maka akan di redirect ke halaman login (username)
+    if(!localStorage.user_lists||localStorage.user_lists=='{}') {
+        $ionicHistory.nextViewOptions({
+            disableBack: true,
+            historyRoot: true
+        });
         $state.go('login');
 	}
 
-	var userJsonList = JSON.parse($window.localStorage.user_lists);
+	var userJsonList = JSON.parse(localStorage.user_lists);
     generateUserList(userJsonList);
 
 	function generateUserList(lastUserList) {
@@ -42,9 +33,9 @@ angular.module('absensiApp')
     
     $scope.removeAccount = function (user) {
 		delete userJsonList[user];
-        $window.localStorage.setItem('user_lists', JSON.stringify(userJsonList));
+        localStorage.setItem('user_lists', JSON.stringify(userJsonList));
 
-        userJsonList = JSON.parse($window.localStorage.user_lists);
+        userJsonList = JSON.parse(localStorage.user_lists);
         generateUserList(userJsonList);
 
         if($scope.userLists.length == 0) {
@@ -64,7 +55,7 @@ angular.module('absensiApp')
 
 .controller('AuthPassCtrl', function($scope, $ionicLoading, $auth, $ionicPopup, $state, $stateParams, $http, $ionicPopup, AuthService, $ionicHistory, constant) {
 
-	$ionicLoading.show();
+    $scope.absenLoading();
 
 	var ui = $scope;
 	ui.ImageUrl = '';
@@ -90,7 +81,7 @@ angular.module('absensiApp')
 	});
 
 	function loadImage(image){
-		$ionicLoading.show();
+        $scope.absenLoading();
 		AuthService.loadImage(image)
 		.then(function(response){
 			$ionicLoading.hide();
@@ -103,7 +94,7 @@ angular.module('absensiApp')
 	}
 
 	ui.login = function(password){
-		$ionicLoading.show();
+        $scope.absenLoading();
 		$auth.login({username : username, password : password})
 			.then(function(response) {
 				if (response.data.status == constant.OK) {

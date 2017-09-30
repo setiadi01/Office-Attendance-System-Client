@@ -9,6 +9,8 @@ angular.module('absensiApp')
     ui.dateFrom = ui.getDisplayDate(new Date());
     ui.dateTo = ui.getDisplayDate(new Date());
 
+    getReportAbsenList(new Date(ui.dateFrom), new Date(ui.dateTo));
+
     var optionDate = {
         titleLabel: 'Select Date From',
         setLabel: 'Set',
@@ -29,6 +31,7 @@ angular.module('absensiApp')
         optionDate.inputDate = new Date(ui.dateFrom);
         optionDate.callback = function (value) {
             ui.dateFrom = ui.getDisplayDate(new Date(value));
+            getReportAbsenList(new Date(ui.dateFrom), new Date(ui.dateTo));
         };
 
         ionicDatePicker.openDatePicker(optionDate);
@@ -39,9 +42,33 @@ angular.module('absensiApp')
         optionDate.inputDate = new Date(ui.dateTo);
         optionDate.callback = function (value) {
             ui.dateTo = ui.getDisplayDate(new Date(value));
+            getReportAbsenList(new Date(ui.dateFrom), new Date(ui.dateTo));
         };
 
         ionicDatePicker.openDatePicker(optionDate);
+    };
+
+    function getReportAbsenList(dateFrom, dateTo) {
+        // load report
+        var input = {
+            startDate: ui.getFormattedDate(dateFrom),
+            endDate: ui.getFormattedDate(dateTo),
+            username: 'oki',
+            limit: 5,
+            offset: 0
+        };
+        ReportService.getReportAbsen(input)
+            .then(function (response) {
+                $ionicLoading.hide();
+                if (response.status == constant.OK) {
+                    console.log(JSON.stringify(response));
+                    ui.checkIn = response.checkIn;
+                    ui.notCheckIn = response.notCheckIn;
+                    ui.lateToCheckIn = response.lateToCheckIn;
+                    ui.workingHours = response.workingHours;
+                }
+                ui.reportList = response.reportList;
+            });
     };
 
     $scope.scrollSmallToTop = function() {

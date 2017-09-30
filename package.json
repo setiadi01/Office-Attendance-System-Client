@@ -23,11 +23,11 @@
         "plugins": {
             "cordova-plugin-console": {},
             "cordova-plugin-device": {},
-            "cordova-plugin-splashscreen": {},
             "cordova-plugin-whitelist": {},
             "ionic-plugin-keyboard": {},
             "cordova-plugin-statusbar": {},
-            "phonegap-plugin-barcodescanner": {}
+            "phonegap-plugin-barcodescanner": {},
+            "cordova-plugin-splashscreen": {}
         },
         "platforms": [
             "android"
