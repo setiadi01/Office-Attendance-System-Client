@@ -1,6 +1,10 @@
-<ion-content class="padding" >
+<ion-content class="padding" ng-show="readyPage">
   <div class="group-statistic">
-    <div class="group-diagram"></div>
+    <div class="group-diagram">
+      <canvas id="bar" class="chart chart-bar"
+              chart-data="data" chart-labels="labels" chart-series="series">
+      </canvas>
+    </div>
     <div class="group-summary">
       <div class="summary">
         <div class="wk-hours">

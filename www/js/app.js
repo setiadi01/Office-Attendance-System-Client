@@ -1,11 +1,11 @@
-angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying', 'ngCordova', 'ionic-datepicker'])
-.run(function($ionicPlatform, $rootScope, $window, $state, $location, $http, constant, $ionicLoading, $ionicPopup, $cordovaStatusbar, $ionicHistory) {
+angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying', 'ngCordova', 'ionic-datepicker', 'chart.js'])
+.run(function($ionicPlatform, $rootScope, $state, $location, $http, constant, $ionicLoading, $ionicPopup, $cordovaStatusbar) {
 
     // splash screen
     $rootScope.$on('$ionicView.afterEnter', function(){
         setTimeout(function(){
             document.getElementById("custom-overlay").style.display = "none";
-        }, 2000);
+        }, 1500);
     });
 
     // handle back button
@@ -51,20 +51,33 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
      */
 
     // get display date
+    $rootScope.getMonthDisplay = function(month) {
+
+        var result = '';
+
+        if(month) {
+            var monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            result = monthNames[month];
+        }
+
+        return result;
+    };
+
+    // get display date
     $rootScope.getDisplayDate = function(date) {
 
         var result = '';
 
         if(date) {
-            var monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
 
             var dd = date.getDate();
             var mm = date.getMonth();
             var yyyy = date.getFullYear();
 
-            result = dd + " " + monthNames[mm] + ", " + yyyy;
+            result = dd + " " + $rootScope.getMonthDisplay(mm) + ", " + yyyy;
         }
 
         return result;
@@ -99,15 +112,10 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
                 text: 'Log Out',
                 type: 'button-positive',
                 onTap: function (e) {
-                    $ionicHistory.clearCache();
-                    $ionicHistory.clearHistory();
-                    $ionicHistory.nextViewOptions({
-                        disableBack: true,
-                        historyRoot: true
-                    });
 
-                    delete $window.localStorage.satellizer_token; // delete token
-                    delete $window.localStorage.user; // delete user information
+                    delete localStorage.satellizer_token; // delete token
+                    delete localStorage.user; // delete user information
+                    delete localStorage.statusLogin; // delete status login
 
                     $location.path('/login-recent');
                 }
@@ -116,11 +124,8 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     }
 
     // show popup error internal
-    $rootScope.internalError = function (param) {
-
-        if(!param || (param && param.hideLoading)) {
-            $ionicLoading.hide();
-        }
+    $rootScope.showInternalError = function () {
+        $ionicLoading.hide();
         $ionicPopup.alert({
             title: 'Internal server error',
             template: 'We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.'
@@ -133,6 +138,15 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         $location.path('/login');
     }
 
+    // set profile
+    $rootScope.setProfile = function(){
+        $rootScope.currentUser = JSON.parse(localStorage.user);
+        $rootScope.currentUser.current_user_img = localStorage.current_user_img;
+        $rootScope.readyPage = true;
+
+        $rootScope.loadImg($rootScope.currentUser.profile_picture);
+    }
+
     // Load image
     $rootScope.loadImg = function(image) {
         if (image) {
@@ -141,7 +155,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             })
             .then(function (response) {
                 var imageBlob = new Blob([response.data], {type: response.headers('Content-Type')});
-                $rootScope.profilePicture = (window.URL || window.webkitURL).createObjectURL(imageBlob);
+                $rootScope.currentUser.current_user_img = (window.URL || window.webkitURL).createObjectURL(imageBlob);
             }).catch(function (response) {
                 $ionicPopup.alert({
                     title: 'Internal server error',
@@ -151,6 +165,27 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         } else {
             $rootScope.profilePicture = '';
         }
+    };
+
+    // Load recent activity
+    $rootScope.loadRecent = function(param) {
+        var input = {};
+        if(param) {
+            input.limit=!param.limit?10:param.limit;
+            input.offset=!param.offset?0:param.offset;
+        } else {
+            input.limit=10;
+            input.offset=0;
+        }
+
+        $http({
+            url: constant.API_URL+'get-recent-activity',
+            method: "GET",
+            params: input
+        })
+        .then(function(response){
+            $rootScope.recentActivityList = response.data.recentActivityList;
+        })
     };
 
     // get logged user
@@ -165,10 +200,10 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
     // val logged user
     $rootScope.valLoggedUser = function () {
-        $rootScope.absenLoading();
+        $rootScope.showLoadingPage();
         $http.get(constant.API_URL+'get-logged-user')
             .then(function(response){
-                $ionicLoading.hide();
+                $rootScope.hideLoadingPage();
                 if(response.data.status == constant.OK) {
                     // Set data user to local storage
                     localStorage.setItem('user', JSON.stringify(response.data.data));
@@ -183,51 +218,66 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
                     if(localStorage && localStorage.user_lists) {
                         $location.path('login-recent');
-                        $ionicHistory.nextViewOptions({
-                            disableBack: true,
-                            historyRoot: true
-                        });
                     } else {
                         $location.path('login');
-                        $ionicHistory.nextViewOptions({
-                            disableBack: true,
-                            historyRoot: true
-                        });
                     }
                 }
             }).catch(function(response){
-            $ionicLoading.hide();
+            $rootScope.hideLoadingPage();
             if(response==null || response.statusText == constant.UNAUTHORIZED) {
                 if(localStorage && localStorage.user_lists) {
                     $location.path('login-recent');
-                    $ionicHistory.nextViewOptions({
-                        disableBack: true,
-                        historyRoot: true
-                    });
                 } else {
                     $location.path('login');
-                    $ionicHistory.nextViewOptions({
-                        disableBack: true,
-                        historyRoot: true
-                    });
                 }
             } else {
-                $rootScope.internalError({hideLoading : false});
+                $rootScope.showError(constant.INTERNAL_ERROR);
             }
         });
     };
 
+    // Custom spinner loading
     $rootScope.absenLoading = function () {
         $ionicLoading.show(
             {
                 templateUrl : 'loading.html'
             }
         );
+    };
+
+    // show loading page
+    $rootScope.showLoadingPage = function () {
+        $rootScope.readyPage = false;
+        $rootScope.error = false;
+        $rootScope.loading = true;
+    };
+
+    // show loading page
+    $rootScope.hideLoadingPage = function () {
+        $rootScope.readyPage = true;
+        $rootScope.loading = false;
+    };
+
+    // show internal error
+    $rootScope.showError = function (param) {
+            $rootScope.hideLoadingPage();
+
+            $rootScope.readyPage = false;
+            $rootScope.error = true;
+            $rootScope.internalError = constant.INTERNAL_ERROR == param ? true : false;
+        
+    };
+    
+    $rootScope.loadApp = function () {
+        $state.go($state.current, {}, {reload: true});
     }
 
     /**
      * End prepare all global function
      */
+
+    $rootScope.loadCurrentUser();
+
 
     $rootScope.$on('$stateChangeSuccess',
         function(event, toState, toParams, fromState, fromParams) {
@@ -258,10 +308,25 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 .constant('constant', {
     API_URL : 'http://192.168.0.168:8000/api/',
     OK : 'OK',
+    NO : 'N',
+    YES : 'Y',
     UNAUTHORIZED : 'Unauthorized',
     CHECK_IN : 'I',
-    CHECK_OUT : 'O'
+    CHECK_OUT : 'O',
+    INTERNAL_ERROR : 'INTERNAL_ERROR',
+    CONNECTION_ERROR : 'CONNECTION_ERROR'
 })
+.config(['ChartJsProvider', function (ChartJsProvider) {
+    // Configure all charts
+    ChartJsProvider.setOptions({
+        chartColors: ['#2D9131', '#009595', '#AE1E1E'],
+        responsive: true
+    });
+    // Configure all line charts
+    ChartJsProvider.setOptions('line', {
+        showLines: false
+    });
+}])
 .config(function($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $ionicConfigProvider, constant) {
 
     $authProvider.loginUrl = constant.API_URL+'login';
@@ -377,6 +442,15 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
         }
       });
 
+    var otherwish;
+    if(localStorage && localStorage.statusLogin) {
+        otherwish = 'app/home';
+    } else if(localStorage && localStorage.user_lists) {
+        otherwish = 'login-recent';
+    } else {
+        otherwish = 'login';
+    }
+
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('app/home');
+    $urlRouterProvider.otherwise(otherwish);
 });

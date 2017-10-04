@@ -58,20 +58,19 @@
 }
 
 .group-statistic {
-    margin: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 95%;
-    height: 200px;
+    margin: 0 auto;
+    width: 340px;
+    height: 235px;
     background: #ffffff;
 }
 
 .group-statistic .group-diagram {
-    height: 65%;
+    padding: 10px;
+    height: 70%;
 }
 
 .group-statistic .group-summary {
-    height: 35%;
+    height: 30%;
     padding: 10px;
 }
 
@@ -119,13 +118,13 @@
 button.check {
     display: block;
     margin: auto;
-    margin-top: 35px;
-    width: 180px;
-    height: 180px;
+    margin-top: 25px;
+    width: 170px;
+    height: 170px;
     border-radius: 50%;
     border: 0;
     color: #ffffff;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 14;
     text-transform: uppercase;
     font-weight: bolder;

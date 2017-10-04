@@ -1,13 +1,13 @@
 <div class="bar bar-subheader">
   <h2 class="title">Edit Profile</h2>
 </div>
-<ion-content class="padding page">
+<ion-content class="padding page" ng-show="readyPage" >
 
   <form class="edit-profile" name="editProfileForm" ng-submit="saveProfile(fullName, userName)">
   <div class="row row-center">
     <div class="col col-center text-center">
         <div class="head">
-            <div class="person edit-profile {{!profilePicture?'no-img':''}}" style="{{profilePicture?'background: url('+profilePicture+')':''}}"></div>
+            <div class="person edit-profile {{!currentUser.current_user_img?'no-img':''}}" style="{{currentUser.current_user_img?'background: url('+currentUser.current_user_img+')':''}}"></div>
             <br />
             <input type="file" accept="image/*"  capture="camera" id="change-photo" class="hide">
             <label for="change-photo" class="change-photo hide">Change photo</label>

@@ -2,11 +2,15 @@ angular.module('absensiApp')
 
 .controller('ReportCtrl', function($scope, ReportService, $state, $ionicPopup, $ionicLoading, constant, $ionicScrollDelegate, ionicDatePicker) {
     // load logged user, if user not authorized, page will redirect to login
-    $scope.valLoggedUser();
+    // $scope.valLoggedUser();
 
     var ui = $scope;
+    ui.setProfile();
 
-    ui.dateFrom = ui.getDisplayDate(new Date());
+    var startDate = new Date();
+    startDate.setDate(1);
+
+    ui.dateFrom = ui.getDisplayDate(startDate);
     ui.dateTo = ui.getDisplayDate(new Date());
 
     getReportAbsenList(new Date(ui.dateFrom), new Date(ui.dateTo));
@@ -17,8 +21,8 @@ angular.module('absensiApp')
         todayLabel: 'Today',
         closeLabel: 'Close',
         dateFormat: 'dd MMMM yyyy',
-        from: new Date(2015, 1, 1),
-        to: new Date(2018, 11, 31),
+        from: new Date().setFullYear(new Date().getFullYear() - 5),
+        to: new Date(),
         mondayFirst: true,
         closeOnSelect: false,
         templateType: 'modal',
@@ -26,7 +30,7 @@ angular.module('absensiApp')
         disableWeekdays: []
     };
 
-    $scope.openDateFrom = function(){
+    ui.openDateFrom = function(){
 
         optionDate.inputDate = new Date(ui.dateFrom);
         optionDate.callback = function (value) {
@@ -37,7 +41,7 @@ angular.module('absensiApp')
         ionicDatePicker.openDatePicker(optionDate);
     };
 
-    $scope.openDateTo = function(){
+    ui.openDateTo = function(){
 
         optionDate.inputDate = new Date(ui.dateTo);
         optionDate.callback = function (value) {
@@ -54,7 +58,7 @@ angular.module('absensiApp')
             startDate: ui.getFormattedDate(dateFrom),
             endDate: ui.getFormattedDate(dateTo),
             username: ui.currentUser.username,
-            limit: 5,
+            limit: 10,
             offset: 0
         };
         ReportService.getReportAbsen(input)
@@ -62,29 +66,29 @@ angular.module('absensiApp')
                 $ionicLoading.hide();
                 if (response.status == constant.OK) {
                     ui.checkIn = response.checkIn;
-                    ui.notCheckIn = response.notCheckIn;
+                    ui.onTime = response.onTime;
                     ui.lateToCheckIn = response.lateToCheckIn;
                     ui.workingHours = response.workingHours;
+                    ui.reportList = response.reportList;
                 }
-                ui.reportList = response.reportList;
             });
     };
 
-    $scope.scrollSmallToTop = function() {
+    ui.scrollSmallToTop = function() {
         $ionicScrollDelegate.$getByHandle('top-content-report').scrollTop(true);
     };
 
-    $scope.actButton="hide";
-    $scope.gotScrolled = function() {
+    ui.actButton="hide";
+    ui.gotScrolled = function() {
         var scroll = $ionicScrollDelegate.$getByHandle('top-content-report').getScrollPosition().top;
 
         if(scroll>150){
-            $scope.$apply(function(){
-                $scope.actButton="show";
+            ui.$apply(function(){
+                ui.actButton="show";
             });// show button
         }else{
-            $scope.$apply(function(){
-                $scope.actButton="hide";
+            ui.$apply(function(){
+                ui.actButton="hide";
             });// hide button
         }
     };

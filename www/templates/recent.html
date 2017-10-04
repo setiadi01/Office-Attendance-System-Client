@@ -1,97 +1,15 @@
-<ion-content class="padding" on-scroll="gotScrolled()" delegate-handle="top-content">
+<ion-content class="padding" on-scroll="gotScrolled()" delegate-handle="top-content" ng-show="readyPage">
   <div class="list">
 
-    <a class="item item-thumbnail-left group-recent" href="#">
+    <a class="item item-thumbnail-left group-recent" ng-repeat="recent in recentActivityList">
       <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
+        <label>{{recent.activity_month}}</label>
+        <p>{{recent.activity_date}}</p>
+        <span>{{recent.activity_day}}</span>
       </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully check out</p>
+      <h2><lable class="icon ion-android-alarm-clock"></label> {{recent.activity_hours}}</h2>
+      <p>{{recent.message}}</p>
     </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully edit profile</p>
-    </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully change profile pictures</p>
-    </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully check in</p>
-    </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully check in</p>
-    </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully check in</p>
-    </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully check in</p>
-    </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully check in</p>
-    </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully check in</p>
-    </a>
-    <a class="item item-thumbnail-left group-recent" href="#">
-      <div class="calender">
-        <label>Agust</label>
-        <p>10</p>
-        <span>Monday</span>
-      </div>
-      <h2><lable class="icon ion-android-alarm-clock"></label> 08.10</h2>
-      <p>You has successfully check in</p>
-    </a>
-
 
   </div>
 </ion-content>

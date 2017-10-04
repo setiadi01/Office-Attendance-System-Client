@@ -1,16 +1,50 @@
 angular.module('absensiApp')
 
-.controller('HomeCtrl', function($ionicPlatform, $scope, $rootScope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner) {
+.controller('HomeCtrl', function($ionicPlatform, $timeout, $scope, $rootScope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner) {
 
     var ui = $scope;
+    ui.series = ['Total check in', 'On time', 'Late to checkin'];
 
-    // load logged user, if user not authorized, page will redirect to login
-    $scope.valLoggedUser();
+    ui.setProfile();
+    ui.statusabsen = ui.currentUser.checkStatus;
 
     // load summary
+    HomeService.getSummaryChart()
+    .then(function (response) {
+        if (response.status == constant.OK) {
+            var summaryChartData = response.summaryChartData;
+            var listData = [];
+            var late = [];
+            var onTime = [];
+            var totalCheckin = [];
+            var month = [];
+
+            for(var i=0; i<summaryChartData.length; i++) {
+
+
+                var date = new Date();
+                date.setMonth(date.getMonth()-(summaryChartData.length-(i)));
+
+                month.push(ui.getMonthDisplay(date.getMonth()));
+                late.push(summaryChartData[i].late);
+                onTime.push(summaryChartData[i].on_time);
+                totalCheckin.push(summaryChartData[i].total_check_in);
+
+            }
+
+            ui.data = [
+                totalCheckin,
+                onTime,
+                late
+            ];
+
+            ui.labels = month;
+
+        }
+    });
+
     HomeService.getSummaryWeekly()
     .then(function (response) {
-        $ionicLoading.hide();
         if (response.status == constant.OK) {
             ui.workingHours = response.workingHours;
             ui.lateToCheckIn = response.lateToCheckIn;
@@ -22,9 +56,9 @@ angular.module('absensiApp')
     $ionicPlatform.ready(function() {
 
         // Check in
-        $scope.doScan = function () {
+        ui.doScan = function () {
 
-            if($scope.statusabsen == constant.CHECK_OUT) {
+            if(ui.currentUser.checkStatus == constant.YES) {
 
                 $ionicPopup.alert({
                     title: 'Failed to check in',
@@ -37,18 +71,20 @@ angular.module('absensiApp')
                     .then(function (barcodeData) {
                         // Success! Barcode data is here
                         if (barcodeData.text) {
-                            $scope.absenLoading();
+                            ui.absenLoading();
                             HomeService.checkin({checkin: barcodeData.text})
                                 .then(function (response) {
                                     if (response.status == constant.OK) {
                                         $ionicLoading.hide();
+                                        ui.loadRecent();
 
                                         // set check status
-                                        localStorage.setItem('checkStatus', constant.CHECK_IN);
-                                        $scope.statusabsen = localStorage.checkStatus;
+                                        ui.currentUser.checkStatus=constant.CHECK_IN;
+                                        localStorage.setItem('user', JSON.stringify(ui.currentUser));
+                                        ui.statusabsen = ui.currentUser.checkStatus;
 
                                         var clock = new Date(),
-                                            username = $scope.currentUser.username,
+                                            username = ui.currentUser.username,
                                             message = 'Good morning '+username;
                                         if(clock.getHours() >= 11) {
                                             message = 'Hello '+username;
@@ -64,21 +100,21 @@ angular.module('absensiApp')
                                         $ionicLoading.hide();
                                         $ionicPopup.alert({
                                             title: 'Failed to check in',
-                                            template: 'Sorry, your check in request failed. Please try again in a moment'
+                                            template: response.error
                                         });
                                     }
                                 }).catch(function (error) {
-                                    $scope.internalError();
+                                ui.showInternalError();
                                 })
                         }
                     }).catch(function (error) {
-                        $scope.internalError();
+                    ui.showInternalError();
                     })
             }
         }
 
         // Check out
-        $scope.doScanCheckout = function () {
+        ui.doScanCheckout = function () {
             $ionicPopup.confirm({
                 title: 'Check Out now ?',
                 template: 'Check out will end your working hours today',
@@ -101,14 +137,16 @@ angular.module('absensiApp')
             $cordovaBarcodeScanner.scan()
                 .then(function (barcodeData) {
                     if (barcodeData.text) {
-                        $scope.absenLoading();
+                        ui.absenLoading();
                         HomeService.checkout({checkout: barcodeData.text})
                             .then(function (response) {
                                 if (response.status == constant.OK) {
+                                    ui.loadRecent();
 
                                     // set check status
-                                    localStorage.setItem('checkStatus', constant.CHECK_OUT);
-                                    $scope.statusabsen = localStorage.checkStatus;
+                                    ui.currentUser.checkStatus=constant.CHECK_OUT;
+                                    localStorage.setItem('user', JSON.stringify(ui.currentUser));
+                                    ui.statusabsen = ui.currentUser.checkStatus;
 
                                     $ionicLoading.hide();
                                     $ionicPopup.alert({
@@ -121,25 +159,27 @@ angular.module('absensiApp')
                                     $ionicLoading.hide();
                                     $ionicPopup.alert({
                                         title: 'Failed to check out',
-                                        template: "Sorry, your check out request failed. Please try again in a moment"
+                                        template: response.error
                                     });
                                 }
 
                             }).catch(function (error) {
-                            $scope.internalError();
+                            ui.showInternalError();
                         });
                     }
                 }).catch(function (error) {
-                $scope.internalError();
+                ui.showInternalError();
             })
         }
     });
 
 })
 
-.controller('RecentCtrl', function($scope, RecentService, $ionicScrollDelegate) {
+.controller('RecentCtrl', function($scope, RecentService, $ionicScrollDelegate, $ionicLoading, constant) {
     // load logged user, if user not authorized, page will redirect to login
-    $scope.valLoggedUser();
+    // $scope.valLoggedUser();
+    $scope.setProfile();
+    $scope.loadRecent();
 
     $scope.scrollSmallToTop = function() {
         $ionicScrollDelegate.$getByHandle('top-content').scrollTop(true);

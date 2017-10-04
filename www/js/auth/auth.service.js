@@ -1,6 +1,7 @@
 angular.module('absensiApp')
 .service('AuthService', AuthService);
 
+
 function AuthService($http, constant){
 	return {
 		getProfilePicture : function(username){

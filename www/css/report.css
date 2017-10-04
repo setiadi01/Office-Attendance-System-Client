@@ -29,7 +29,7 @@
     height: 100px;
 }
 
-.box-4.total-check-in p, .box-4.late-to-check-in p, .box-4.not-check-in p, .box-4.working-hours p {
+.box-4.total-check-in p, .box-4.late-to-check-in p, .box-4.on-time p, .box-4.working-hours p {
     font-size: 40px;
     text-align: center;
     margin-top: 10px;
@@ -37,7 +37,7 @@
     margin-bottom: 17px;
 }
 
-.box-4.total-check-in label, .box-4.late-to-check-in label, .box-4.not-check-in label, .box-4.working-hours label {
+.box-4.total-check-in label, .box-4.late-to-check-in label, .box-4.on-time label, .box-4.working-hours label {
     display: block;
     text-align: center;
     width: 100%;
@@ -47,7 +47,7 @@
     font-weight: bold;
 }
 
-.box-4.total-check-in, .box-4.late-to-check-in, .box-4.not-check-in, .box-4.working-hours {
+.box-4.total-check-in, .box-4.late-to-check-in, .box-4.on-time, .box-4.working-hours {
     height: 90px;
     padding: 5px;
 }
@@ -60,12 +60,12 @@
     background: #C39419;
 }
 
-.box-4.not-check-in {
-    background: #AE1E1E;
+.box-4.on-time {
+    background: #009595;
 }
 
 .box-4.working-hours {
-    background: #009595;
+    background: #AE1E1E;
 }
 
 button.date-picker {

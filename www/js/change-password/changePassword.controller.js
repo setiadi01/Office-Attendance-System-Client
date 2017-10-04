@@ -1,27 +1,27 @@
 angular.module('absensiApp')
 
 .controller('ChangePasswordCtrl', function($scope, ChangePasswordService, $state, $ionicLoading, constant, $ionicPopup) {
-    // load logged user, if user not authorized, page will redirect to login
-    $scope.valLoggedUser();
 
-    $scope.savePassword = function (currentPassword, newPassword) {
+    $scope.setProfile();
 
-        console.log("masuk savePassword()");
-        var input = {};
-        input.currentPassword = currentPassword;
-        input.newPassword = newPassword;
+    $scope.input={};
 
-        console.log(input);
+    $scope.savePassword = function () {
 
-        ChangePasswordService.changePassword(input)
+        ChangePasswordService.changePassword($scope.input)
         .then(function (response) {
             if (response.status == constant.OK) {
+                $scope.loadRecent();
                 $ionicLoading.hide();
+
+                $scope.input={};
+
                 $ionicPopup.alert({
                     title: 'Success',
                     cssClass: 'success',
                     template: response.message
                 });
+
             }
             else {
                 $ionicLoading.hide();
@@ -32,7 +32,7 @@ angular.module('absensiApp')
             }
         })
         .catch(function (error) {
-            $scope.internalError();
+            $scope.showInternalError();
         });
     }
 

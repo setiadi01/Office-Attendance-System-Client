@@ -55,8 +55,6 @@ angular.module('absensiApp')
 
 .controller('AuthPassCtrl', function($scope, $ionicLoading, $auth, $ionicPopup, $state, $stateParams, $http, $ionicPopup, AuthService, $ionicHistory, constant) {
 
-    $scope.absenLoading();
-
 	var ui = $scope;
 	ui.ImageUrl = '';
     ui.showPasswordIsChecked = false;
@@ -69,26 +67,22 @@ angular.module('absensiApp')
 
 	AuthService.getProfilePicture(username)
 	.then(function(response){
-		$ionicLoading.hide();
 		if (response.data == null) {
 			ui.profilePicture = ''
 		}else{
 			loadImage(response.data)
 		}
 	}).catch(function(response){
-		$ionicLoading.hide();
         ui.profilePicture = ''
 	});
 
 	function loadImage(image){
-        $scope.absenLoading();
 		AuthService.loadImage(image)
 		.then(function(response){
-			$ionicLoading.hide();
 			var imageBlob = new Blob([response.data], { type: response.headers('Content-Type') });
 	        ui.profilePicture = (window.URL || window.webkitURL).createObjectURL(imageBlob);
+            localStorage.setItem('current_user_img', ui.profilePicture);
 		}).catch(function(response){
-			$ionicLoading.hide();
             ui.profilePicture = ''
 		});
 	}
@@ -101,6 +95,7 @@ angular.module('absensiApp')
 
 					// Set data user to local storage
                     localStorage.setItem('user', JSON.stringify(response.data.user));
+                    localStorage.setItem('statusLogin', true);
 
                     var currentUser = response.data.user,
 						userJson = {};
@@ -143,7 +138,7 @@ angular.module('absensiApp')
 				}
 			})
 			.catch(function(response) {
-                $scope.internalError();
+                $scope.showInternalError();
 			});
 	}
 })

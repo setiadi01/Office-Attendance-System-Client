@@ -1,7 +1,7 @@
 <div class="bar bar-subheader">
     <h2 class="title">Report</h2>
 </div>
-<ion-content class="padding page" on-scroll="gotScrolled()" delegate-handle="top-content-report">
+<ion-content class="padding page" on-scroll="gotScrolled()" delegate-handle="top-content-report" ng-show="readyPage">
 
 
     <div class="filter-report">
@@ -25,9 +25,9 @@
             <label>Late to</label>
             <label>check in</label>
         </div>
-        <div class="box-4 not-check-in">
-            <p>{{notCheckIn}}</p>
-            <label>Not</label>
+        <div class="box-4 on-time">
+            <p>{{onTime}}</p>
+            <label>On Time</label>
             <label>check in</label>
         </div>
         <div class="box-4 working-hours">
@@ -47,7 +47,6 @@
             <h2>{{report.full_name}}</h2>
             <p>{{report.checkin_hours}} <span>to</span> {{report.checkout_hours}}</p>
         </a>
-
 
     </div>
 </ion-content>

@@ -11,28 +11,59 @@
         <p class="date">{{clock | date:'EEEE, dd MMMM yyyy'}}</p>
         <p class="clock">{{clock | date:'HH:mm:ss'}}</p>
       </div>
-      <a href="#/app/notifications" class="button button-icon button-clear ion-android-notifications"></a>
+      <a href="#/app/notifications" class="hide button button-icon button-clear ion-android-notifications"></a>
     </div>
     <div class="bar bar-header bar-positive page" ng-hide="tab">
       <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
       <h1 class="title">ABSEN</h1>
-      <a href="#/app/notifications" class="button button-icon button-clear ion-android-notifications"></a>
+      <a href="#/app/notifications" class="hide button button-icon button-clear ion-android-notifications"></a>
     </div>
     <ion-content class="{{page=='home'?'home':'recent'}}" ng-hide="!tab">
       <ion-tabs class="tabs-icon-top tabs-positive">
 
         <ion-tab title="Home" icon="ion-home" href="#/app/home">
-          <ion-nav-view name="home-tab"></ion-nav-view>
+          <ion-nav-view name="home-tab">
+            <div class="error" ng-hide="!error" ng-click="loadApp()">
+              <div class="error-server" ng-hide="!internalError"></div>
+              <p class="message">We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.</p>
+            </div>
+            <div class="page-loading" ng-hide="error || !loading">
+              <div class="spinner">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+              </div>
+            </div>
+          </ion-nav-view>
         </ion-tab>
 
         <ion-tab title="Recent" icon="ion-ios-refresh" href="#/app/recent">
-          <ion-nav-view name="recent-tab"></ion-nav-view>
+          <ion-nav-view name="recent-tab">
+            <div class="error" ng-hide="!error" ng-click="loadApp()">
+              <div class="error-server"></div>
+              <p class="message">We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.</p>
+            </div>
+            <div class="page-loading" ng-hide="error || !loading">
+              <div class="dot1"></div>
+              <div class="dot2"></div>
+            </div>
+          </ion-nav-view>
         </ion-tab>
 
       </ion-tabs>
     </ion-content>
     <ion-content ng-hide="tab">
-      <ion-nav-view name="page"></ion-nav-view>
+      <ion-nav-view name="page">
+        <div class="error" ng-hide="!error" ng-click="loadApp()">
+          <div class="error-server" ng-hide="!internalError"></div>
+          <p class="message">We are sorry, it seems there is a problem with our servers. Please try your request again in a moment.</p>
+        </div>
+        <div class="page-loading" ng-hide="error || !loading">
+          <div class="spinner">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+          </div>
+        </div>
+      </ion-nav-view>
     </ion-content>
   </ion-side-menu-content>
 
@@ -42,7 +73,7 @@
     <ion-content class="hide-header">
 
       <div class="header-menu">
-        <div class="person side-menu {{!profilePicture?'no-img':''}}" style="{{profilePicture?'background: url('+profilePicture+')':''}}"></div>
+        <div class="person side-menu {{!currentUser.current_user_img?'no-img':''}}" style="{{currentUser.current_user_img?'background: url('+currentUser.current_user_img+')':''}}"></div>
         <h1 class="color-white">{{ currentUser.full_name }}</h1>
         <span>{{ currentUser.role }}</span>
       </div>
@@ -51,7 +82,7 @@
         <ion-item menu-close href="#/app/home" ng-class="page=='home'?'active':page=='recent'?'active':''">
           <i class="icon ion-home"></i> Home
         </ion-item>
-        <ion-item menu-close href="#/app/notifications" ng-class="page=='notifications'?'active':''">
+        <ion-item menu-close href="#/app/notifications" class="hide" ng-class="page=='notifications'?'active':''">
           <i class="icon ion-android-notifications"></i> Notifications
         </ion-item>
         <ion-item menu-close href="#/app/edit-profile" ng-class="page=='edit-profile'?'active':''">

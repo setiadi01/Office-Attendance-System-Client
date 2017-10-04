@@ -41,6 +41,11 @@ input[type="password"], input[type="password"]::placeholder,
     font-weight: bold;
 }
 
+.group-date {
+    position: absolute;
+    padding-right: 10px;
+}
+
 .group-date, .sub-title {
     width: 100%;
     text-align: center;
@@ -78,7 +83,7 @@ div.person.no-img {
     background: #009496;
 }
 
-.view-container.tab-content .pane, .padding.page.scroll-content {
+ion-nav-view, ion-nav-view[name="page"].view-container .pane, .view-container.tab-content .pane, .padding.page.scroll-content {
     background: #d3d3d3;
 }
 
@@ -283,7 +288,7 @@ div.popup-container.popup-showing.active > .popup {
 
 .primary-long-input input {
     background: #ffffff;
-    font-size: 20px;
+    font-size: 17px;
     width: 100%;
     text-align: left;
     padding: 30px 30px 30px 60px;
@@ -351,3 +356,99 @@ button.primary-long-btn {
 /**
  * END CALENDER
  */
+
+.page-loading {
+    position: absolute;
+    width: 100%;
+    z-index: 5;
+}
+
+.page-loading .spinner{
+    margin: 300px auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    text-align: center;
+
+    -webkit-animation: sk-rotate 2.0s infinite linear;
+    animation: sk-rotate 2.0s infinite linear;
+}
+
+.page-loading .spinner .dot1, .page-loading .spinner .dot2 {
+    width: 60%;
+    height: 60%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    background-color: #009595;
+    border-radius: 100%;
+
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.page-loading .spinner .dot2 {
+    top: auto;
+    bottom: 0;
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+    0%, 100% { -webkit-transform: scale(0.0) }
+    50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+    0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    } 50% {
+          transform: scale(1.0);
+          -webkit-transform: scale(1.0);
+      }
+}
+
+.error:active{
+    opacity: 0.6;
+}
+
+.error{
+    position: absolute;
+    z-index: 5;
+    height: 100%;
+    margin: auto;
+}
+
+.error .error-server {
+    margin: 200px auto 0 auto;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIzMnB4IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMycHgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c2tldGNoPSJodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2gvbnMiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48dGl0bGUvPjxkZXNjLz48ZGVmcy8+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSI+PGcgZmlsbD0iIzkyOTI5MiIgaWQ9Imljb24tMjMtY2xvdWQtZXJyb3IiPjxwYXRoIGQ9Ik0xNi41LDIxIEMxNi4yMjM4NTc2LDIxIDE2LDIwLjc2ODA2NjQgMTYsMjAuNSBDMTYsMjAuMjIzODU3NiAxNi4yMzE5MzM2LDIwIDE2LjUsMjAgQzE2Ljc3NjE0MjQsMjAgMTcsMjAuMjMxOTMzNiAxNywyMC41IEMxNywyMC43NzYxNDI0IDE2Ljc2ODA2NjQsMjEgMTYuNSwyMSBMMTYuNSwyMSBaIE0yNi45OTkzNDk0LDE0LjQxNDUyOTUgQzI4Ljc2NzY0NTcsMTUuMTg1MjkzMSAzMCwxNi45NDgzMzg2IDMwLDE5IEMzMCwyMS43NTU4MDQ4IDI3Ljc2MTY3NDUsMjQgMjUuMDAwNTYwMSwyNCBMNy45OTk0Mzk5MiwyNCBDNS4yMzI0OTQxOCwyNCAzLDIxLjc2MTQyMzcgMywxOSBDMywxNi45NDkxMzExIDQuMjM5NjU4NzYsMTUuMTgxNjA4NSA2LjAxMTg5NjYxLDE0LjQxMTUzODggTDYuMDExODk2NjEsMTQuNDExNTM4OCBDNi4wMDQwMDIwNywxNC4yNzUzNjcgNiwxNC4xMzgxNTA5IDYsMTQgQzYsMTAuMTM0MDA2NiA5LjEzNDAwNjU2LDcgMTMsNyBDMTUuMjk3OTQ2OSw3IDE3LjMzNzI3NDUsOC4xMDcyODA1NSAxOC42MTM1Mzg0LDkuODE3Mzk3MzUgQzE5LjQ1MjU3MTksOS4yOTkwOTcwMSAyMC40NDEzNTcsOSAyMS41LDkgQzI0LjUwOTAyNDgsOSAyNi45NTM2NzQ0LDExLjQxNjM3NjMgMjYuOTk5MzQ5NCwxNC40MTQ1Mjk1IEwyNi45OTkzNDk0LDE0LjQxNDUyOTUgTDI2Ljk5OTM0OTQsMTQuNDE0NTI5NSBaIE0xNi41LDEzIEMxNi4yMjM4NTc2LDEzIDE2LDEzLjIyNzg4MDUgMTYsMTMuNDkxMDA1MiBMMTYsMTguNTA4OTk0OCBDMTYsMTguNzgwMTY5NSAxNi4yMzE5MzM2LDE5IDE2LjUsMTkgQzE2Ljc3NjE0MjQsMTkgMTcsMTguNzcyMTE5NSAxNywxOC41MDg5OTQ4IEwxNywxMy40OTEwMDUyIEMxNywxMy4yMTk4MzA1IDE2Ljc2ODA2NjQsMTMgMTYuNSwxMyBMMTYuNSwxMyBaIiBpZD0iY2xvdWQtZXJyb3IiLz48L2c+PC9nPjwvc3ZnPg==) no-repeat center;
+    height: 100px;
+    width: 100px;
+    background-size: 100% 100%;
+}
+.error p.message {
+    margin: auto;
+    color: #929292;
+    font-weight: bold;
+    width: 90%;
+    text-align: center;
+}
+
+/**
+ * FOR LANDSCAPE
+ */
+@media screen and (max-height: 468px) {
+
+    .page-loading {
+        margin: 200px auto;
+    }
+
+    .error .error-server {
+        margin: 120px auto 0 auto;
+    }
+
+}

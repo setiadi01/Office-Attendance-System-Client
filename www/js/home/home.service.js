@@ -30,12 +30,18 @@ function HomeService($http, constant, $httpParamSerializer){
                     return response.data;
                 })
 
+        },
+        getSummaryChart : function(){
+            return $http.get(constant.API_URL+'get-summary-chart')
+                .then(function(response){
+                    return response.data;
+                })
+
         }
 	}
 }
 
 function RecentService($http, constant){
     return {
-
     }
 }
