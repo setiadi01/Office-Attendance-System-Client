@@ -89,7 +89,7 @@ angular.module('absensiApp')
 
 	ui.login = function(password){
         $scope.absenLoading();
-		$auth.login({username : username, password : password})
+		$auth.login({username : username, password : password, versionApp: constant.VERSION_APP})
 			.then(function(response) {
 				if (response.data.status == constant.OK) {
 
@@ -118,7 +118,19 @@ angular.module('absensiApp')
                         $ionicLoading.hide();
                         $state.go('app.home');
                     });
-				}else{
+				} else if (response.data.status == constant.REQUIRED_UPDATE) {
+                    $ionicLoading.hide();
+                    $ionicPopup.confirm({
+                        title: 'Required Update',
+                        template: response.data.message,
+                        buttons: [{
+                            text: 'Update Now',
+                            onTap: function (e) {
+                                window.open('http://bit.ly/update-absen', '_system', 'location=yes'); return false;
+                            }
+                        }]
+                    });
+                } else{
 
                     $ionicLoading.hide();
                     $ionicPopup.confirm({

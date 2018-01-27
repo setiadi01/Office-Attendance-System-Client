@@ -2,6 +2,8 @@ angular.module('absensiApp')
 
 .controller('HomeCtrl', function($ionicPlatform, $timeout, $scope, $rootScope, HomeService, $state, $ionicLoading, $ionicPopup, constant, $cordovaBarcodeScanner) {
 
+    $rootScope.valLoggedUser();
+
     var ui = $scope;
     ui.series = ['Total check in', 'On time', 'Late to checkin'];
 
@@ -11,6 +13,7 @@ angular.module('absensiApp')
     // load summary
     HomeService.getSummaryChart()
     .then(function (response) {
+        console.log("test", response);
         if (response.status == constant.OK) {
             var summaryChartData = response.summaryChartData;
             var listData = [];
@@ -23,7 +26,8 @@ angular.module('absensiApp')
 
 
                 var date = new Date();
-                date.setMonth(date.getMonth()-(summaryChartData.length-(i)));
+                // date.setMonth(date.getMonth()-(summaryChartData.length-(i)));
+                date.setMonth(date.getMonth());
 
                 month.push(ui.getMonthDisplay(date.getMonth()));
                 late.push(summaryChartData[i].late);
@@ -38,8 +42,9 @@ angular.module('absensiApp')
                 late
             ];
 
-            ui.labels = month;
+            console.log(ui.data);
 
+            ui.labels = month;
         }
     });
 
@@ -58,7 +63,7 @@ angular.module('absensiApp')
         // Check in
         ui.doScan = function () {
 
-            if(ui.currentUser.checkStatus == constant.YES) {
+            if(ui.currentUser.checkStatus == constant.YES || ui.currentUser.checkStatus == constant.CHECK_OUT) {
 
                 $ionicPopup.alert({
                     title: 'Failed to check in',
@@ -72,7 +77,12 @@ angular.module('absensiApp')
                         // Success! Barcode data is here
                         if (barcodeData.text) {
                             ui.absenLoading();
-                            HomeService.checkin({checkin: barcodeData.text})
+                            var param = {
+                                username: ui.currentUser.username,
+                                checkin: barcodeData.text,
+                                versionApp: constant.VERSION_APP
+                            }
+                            HomeService.checkin(param)
                                 .then(function (response) {
                                     if (response.status == constant.OK) {
                                         $ionicLoading.hide();
@@ -94,6 +104,19 @@ angular.module('absensiApp')
                                             title: 'Success to check in',
                                             cssClass: 'success',
                                             template: message+'. Keep spirit for today :)'
+                                        });
+                                    }
+                                    else if (response.data.status == constant.REQUIRED_UPDATE) {
+                                        $ionicLoading.hide();
+                                        $ionicPopup.confirm({
+                                            title: 'Required Update',
+                                            template: response.data.message,
+                                            buttons: [{
+                                                text: 'Update Now',
+                                                onTap: function (e) {
+                                                    window.open('http://bit.ly/update-absen', '_system', 'location=yes'); return false;
+                                                }
+                                            }]
                                         });
                                     }
                                     else {
@@ -138,15 +161,19 @@ angular.module('absensiApp')
                 .then(function (barcodeData) {
                     if (barcodeData.text) {
                         ui.absenLoading();
-                        HomeService.checkout({checkout: barcodeData.text})
+                        var param = {
+                            username: ui.currentUser.username,
+                            checkout: barcodeData.text
+                        }
+                        HomeService.checkout(param)
                             .then(function (response) {
                                 if (response.status == constant.OK) {
                                     ui.loadRecent();
 
-                                    // set check status
-                                    ui.currentUser.checkStatus=constant.CHECK_OUT;
+                                    // update informasi terbaru user
+                                    $rootScope.valLoggedUser();
                                     localStorage.setItem('user', JSON.stringify(ui.currentUser));
-                                    ui.statusabsen = ui.currentUser.checkStatus;
+                                    ui.statusabsen = $rootScope.statusabsen;
 
                                     $ionicLoading.hide();
                                     $ionicPopup.alert({

@@ -8,6 +8,7 @@ angular.module('absensiApp')
 
     $scope.savePassword = function () {
 
+        $scope.input.username=$scope.currentUser.username;
         ChangePasswordService.changePassword($scope.input)
         .then(function (response) {
             if (response.status == constant.OK) {

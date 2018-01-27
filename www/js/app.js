@@ -54,14 +54,15 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
     $rootScope.getMonthDisplay = function(month) {
 
         var result = '';
-
-        if(month) {
+        if(month || month===0) {
             var monthNames = ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
             ];
 
             result = monthNames[month];
         }
+
+         console.log(result);
 
         return result;
     };
@@ -306,8 +307,10 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://192.168.0.168:8000/api/',
+    API_URL : 'http://192.168.0.100',
     OK : 'OK',
+    REQUIRED_UPDATE : 'REQUIRED_UPDATE',
+    VERSION_APP : 'BETA-0.0.2',
     NO : 'N',
     YES : 'Y',
     UNAUTHORIZED : 'Unauthorized',

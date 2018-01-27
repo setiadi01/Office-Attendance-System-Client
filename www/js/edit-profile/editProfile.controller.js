@@ -18,7 +18,8 @@ angular.module('absensiApp')
 
         var input = {
             fullName: fullName,
-            username: username
+            newUsername: username,
+            currentUsername: ui.userName
         };
 
         EditProfileService.doEditProfile(input)
