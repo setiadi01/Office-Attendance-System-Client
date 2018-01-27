@@ -307,7 +307,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://192.168.0.100',
+    API_URL : 'http://192.168.0.100/api/',
     OK : 'OK',
     REQUIRED_UPDATE : 'REQUIRED_UPDATE',
     VERSION_APP : 'BETA-0.0.2',
