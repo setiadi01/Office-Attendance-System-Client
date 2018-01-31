@@ -9,12 +9,14 @@ angular.module('absensiApp')
 
     var startDate = new Date();
     if(startDate.getDate()<21) { 
+        startDate.setDate(1);
         startDate.setMonth(startDate.getMonth()-1);
     }
     startDate.setDate(21);
 
     var endDate = new Date();
     if(endDate.getDate()>20) { 
+        endDate.setDate(1);
         endDate.setMonth(endDate.getMonth()+1);
     }
     endDate.setDate(20);
@@ -70,7 +72,6 @@ angular.module('absensiApp')
             limit: 10,
             offset: 0
         };
-        console.log(input);
         ReportService.getReportAbsen(input)
             .then(function (response) {
                 $ionicLoading.hide();
