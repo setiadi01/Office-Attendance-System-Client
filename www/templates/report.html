@@ -15,37 +15,37 @@
         </button>
     </div>
     <div class="summary-report">
-        <div class="box-4 total-check-in">
-            <p>{{checkIn}}</p>
-            <label>Total</label>
-            <label>check in</label>
-        </div>
-        <div class="box-4 late-to-check-in">
-            <p>{{lateToCheckIn}}</p>
-            <label>Late to</label>
-            <label>check in</label>
-        </div>
-        <div class="box-4 on-time">
+        <div class="box-4 on-time" ng-click="doSearchOnTimeReportAbsensi()">
             <p>{{onTime}}</p>
             <label>On Time</label>
             <label>check in</label>
         </div>
-        <div class="box-4 working-hours">
-            <p>{{workingHours}}</p>
-            <label>Working</label>
-            <label>hours</label>
+        <div class="box-4 late-to-check-in" ng-click="doSearchLateReportAbsensi()">
+            <p>{{lateToCheckIn}}</p>
+            <label>Late to</label>
+            <label>check in</label>
+        </div>
+        <div class="box-4 working-hours" ng-click="doSearchNotCheckinReportAbsensi()">
+            <p>{{notCheckIn}}</p>
+            <label>Not</label>
+            <label>check in</label>
+        </div>
+        <div class="box-4 total-check-in" ng-click="doSearchReportAbsensi()">
+            <p>{{checkIn}}</p>
+            <label>Total</label>
+            <label>check in</label>
         </div>
     </div>
     <div class="list">
 
-        <a class="item item-thumbnail-left group-report" ng-repeat="report in reportList">
+        <a class="item item-thumbnail-left group-report" ng-repeat="report in reportList" ng-click="showModal(report)" >
             <div class="calender">
                 <label>{{report.checkin_month}}</label>
                 <p>{{report.checkin_date}}</p>
                 <span>{{report.checkin_day}}</span>
             </div>
             <h2>{{report.full_name}}</h2>
-            <p>{{report.checkin_hours}} <span>to</span> {{report.checkout_hours}}</p>
+            <p class="{{report.checkin_hours=='-'?'not-check-list':''}}">{{report.checkin_hours=='-'?(report.reason_code!=''?report.description:'You did not checkin on this date. Tap to choose reason'):report.checkin_hours}} <span ng-hide="report.checkin_hours=='-'">to</span> {{report.checkout_hours=='-'?'':report.checkout_hours}}</p>
         </a>
 
     </div>

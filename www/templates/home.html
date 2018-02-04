@@ -8,15 +8,15 @@
     <div class="group-summary">
       <div class="summary">
         <div class="wk-hours">
-          <p>{{workingHours}} <label>Hours</label></p>
-          <label>Working Hourse</label>
+          <p>{{workDay>0?'>24':("0" + workHour).slice(-2)}}<span class="{{statusabsen=='I'? 'blink':''}}">:</span>{{workDay>0?'00':("0" + workMinute).slice(-2)}}<label></label></p>
+          <label>Working hour</label>
         </div>
         <div class="late-ck">
-          <p>{{lateToCheckIn}} <label>Times</label></p>
-          <label>Late to check in</label>
+          <p>{{lastCheckIn}}<label></label></p>
+          <label>Last check in</label>
         </div>
         <div class="best-ck">
-          <p>{{bestCheckIn}}</label></p>
+          <p>{{bestCheckIn}} <label></label></p>
           <label>Best check in</label>
         </div>
       </div>

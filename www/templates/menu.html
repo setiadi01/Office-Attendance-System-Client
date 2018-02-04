@@ -6,7 +6,7 @@
     </ion-nav-bar>
     <div class="bar bar-header bar-positive" ng-hide="!tab">
       <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
-      <h1 class="title">ABSEN</h1>
+      <h1 class="title">ABSEN<span class="lb-beta">beta</span></h1>
       <div class="group-date">
         <p class="date">{{clock | date:'EEEE, dd MMMM yyyy'}}</p>
         <p class="clock">{{clock | date:'HH:mm:ss'}}</p>
@@ -15,7 +15,7 @@
     </div>
     <div class="bar bar-header bar-positive page" ng-hide="tab">
       <button class="button button-icon button-clear ion-navicon-round" menu-toggle="left"></button>
-      <h1 class="title">ABSEN</h1>
+      <h1 class="title">ABSEN<span class="lb-beta">beta</span></h1>
       <a href="#/app/notifications" class="hide button button-icon button-clear ion-android-notifications"></a>
     </div>
     <ion-content class="{{page=='home'?'home':'recent'}}" ng-hide="!tab">

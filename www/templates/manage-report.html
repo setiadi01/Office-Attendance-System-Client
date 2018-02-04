@@ -1,0 +1,29 @@
+<ion-modal-view class="popup-edit" style="height: 90%; top: 45%;">
+    <ion-header-bar>
+        <header class="bar bar-header bar-positive">
+            <h1 class="title left-0">Choose reason</h1>
+            <a class="button button-clear button-dark" style="color: #fff;border: 1px solid #fff;padding: 3px;margin: 0;" ng-click="modal.hide()">Close</a>
+        </header>
+    </ion-header-bar>
+    <ion-content>
+        <div class="row row-center">
+            <div class="col col-center text-center">
+                <br />
+                <div class="calender">
+                    <label>{{currentSelectReportItem.checkin_month}}</label>
+                    <p>{{currentSelectReportItem.checkin_date}}</p>
+                    <span>{{currentSelectReportItem.checkin_day}}</span>
+                </div>
+                <div class="form-group">
+                    <select class="form-control reason" id="sel1" ng-model="input.reason">
+                        <option value="">-- Select One --</option>
+                        <option ng-repeat="item in reasonList" value="{{item.reason_code}}">{{item.reason_name}}</option>
+                    </select>
+                </div>
+                <div class="footer">
+                    <button type="submit" class="primary-long-btn" ng-click="saveReason()" style="display: block; margin: auto">Save</button>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

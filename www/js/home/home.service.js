@@ -24,8 +24,8 @@ function HomeService($http, constant, $httpParamSerializer){
             })
 
         },
-        getSummaryWeekly : function(){
-            return $http.get(constant.API_URL+'get-summary-weekly')
+        getLastInfoCheckin: function(){
+            return $http.get(constant.API_URL+'get-last-info-checkin')
                 .then(function(response){
                     return response.data;
                 })

@@ -167,6 +167,36 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
             $rootScope.profilePicture = '';
         }
     };
+    
+    // Get Update
+    $rootScope.checkUpdate = function () {
+        var input = {
+            version : constant.VERSION_APP
+        }
+        $http({
+            url: constant.API_URL+'check-update',
+            method: "GET",
+            params: input
+        })
+        .then(function(response) {
+            console.log(response);
+            if(response.data.status == constant.REQUIRED_UPDATE) {
+                $ionicPopup.confirm({
+                    title: 'Required Update',
+                    template: response.data.message,
+                    buttons: [{
+                        text: 'Update Now',
+                        onTap: function (e) {
+                            window.open('http://bit.ly/update-absen', '_system', 'location=yes');
+                            return false;
+                        }
+                    }]
+                });
+            }
+        })
+    }
+
+    $rootScope.checkUpdate();
 
     // Load recent activity
     $rootScope.loadRecent = function(param) {
@@ -307,7 +337,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 
 })
 .constant('constant', {
-    API_URL : 'http://192.168.0.100/api/',
+    API_URL : 'http://semarsts.ddns.net/api/',
     OK : 'OK',
     REQUIRED_UPDATE : 'REQUIRED_UPDATE',
     VERSION_APP : 'BETA-0.0.2',
@@ -322,7 +352,7 @@ angular.module('absensiApp', ['ionic', 'satellizer', 'ionic-sidemenu-overlaying'
 .config(['ChartJsProvider', function (ChartJsProvider) {
     // Configure all charts
     ChartJsProvider.setOptions({
-        chartColors: ['#2D9131', '#009595', '#AE1E1E'],
+        chartColors: ['#2D9131', '#009595', '#c99f69', '#AE1E1E'],
         responsive: true
     });
     // Configure all line charts

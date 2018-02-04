@@ -5,135 +5,157 @@ angular.module('absensiApp')
     $rootScope.valLoggedUser();
 
     var ui = $scope;
-    ui.series = ['Total check in', 'On time', 'Late to checkin'];
+    ui.series = ['Total check in', 'On time', 'Late to checkin', 'Not checkin'];
 
     ui.setProfile();
     ui.statusabsen = ui.currentUser.checkStatus;
 
     // load summary
-    HomeService.getSummaryChart()
-    .then(function (response) {
-        console.log("test", response);
-        if (response.status == constant.OK) {
-            var summaryChartData = response.summaryChartData;
-            var listData = [];
-            var late = [];
-            var onTime = [];
-            var totalCheckin = [];
-            var month = [];
+    var loadSummary = function() {
+        HomeService.getSummaryChart()
+            .then(function (response) {
+                if (response.status == constant.OK) {
+                    console.log(response);
+                    var summaryChartData = response.summaryChartData;
+                    var late = [];
+                    var onTime = [];
+                    var totalCheckin = [];
+                    var month = [];
+                    var notCheckin = [];
 
-            for(var i=0; i<summaryChartData.length; i++) {
+                    for(var i=0; i<summaryChartData.length; i++) {
 
+                        month.push(summaryChartData[i].bulan);
+                        late.push(summaryChartData[i].late);
+                        onTime.push(summaryChartData[i].on_time);
+                        totalCheckin.push(summaryChartData[i].total_check_in);
+                        notCheckin.push(summaryChartData[i].not_checkin);
 
-                var date = new Date();
-                // date.setMonth(date.getMonth()-(summaryChartData.length-(i)));
-                date.setMonth(date.getMonth());
+                    }
 
-                month.push(ui.getMonthDisplay(date.getMonth()));
-                late.push(summaryChartData[i].late);
-                onTime.push(summaryChartData[i].on_time);
-                totalCheckin.push(summaryChartData[i].total_check_in);
+                    ui.data = [
+                        totalCheckin,
+                        onTime,
+                        late,
+                        notCheckin
+                    ];
 
+                    ui.labels = month;
+                }
+            });
+    }
+    loadSummary();
+
+    var callGetLastInfoCheckin = function() {
+        HomeService.getLastInfoCheckin()
+        .then(function (response) {
+            if (response.status == constant.OK) {
+
+                console.log(response);
+                var lastCheckIn = response.lastCheckIn;
+                var bestCheckIn = response.bestCheckIn;
+                ui.workDay = response.workDay;
+                var workHour = response.workHour;
+                var workMinute = response.workMinute;
+                ui.statusabsen = response.statusAbsen;
+
+                if(ui.statusabsen == 'N') {
+                    ui.workDay = 0;
+                }
+
+                if(!lastCheckIn || ui.statusabsen == 'N') {
+                    ui.lastCheckIn = "--:--";
+                } else {
+                    ui.lastCheckIn = lastCheckIn.substr(0,2)+':'+lastCheckIn.substr(2,2);
+                }
+
+                if(!bestCheckIn) {
+                    ui.bestCheckIn = "--:--";
+                } else{
+                    ui.bestCheckIn = bestCheckIn;
+                }
+
+                console.log(ui.statusabsen);
+
+                if(ui.statusabsen == 'N') {
+                    ui.workHour = "--";
+                } else {
+                    ui.workHour = workHour;
+                }
+
+                if(ui.statusabsen == 'N') {
+                    ui.workMinute = "--";
+                } else {
+                    ui.workMinute = workMinute;
+                }
             }
+        });
+    };
+    callGetLastInfoCheckin();
 
-            ui.data = [
-                totalCheckin,
-                onTime,
-                late
-            ];
+    setInterval(function () {
+        callGetLastInfoCheckin();
+    }, 60000);
 
-            console.log(ui.data);
-
-            ui.labels = month;
+    var checkin = function (barcodetext) {
+        var param = {
+            username: ui.currentUser.username,
+            checkin: barcodetext
         }
-    });
+        HomeService.checkin(param)
+            .then(function (response) {
+                if (response.status == constant.OK) {
+                    $ionicLoading.hide();
+                    ui.loadRecent();
+                    callGetLastInfoCheckin();
 
-    HomeService.getSummaryWeekly()
-    .then(function (response) {
-        if (response.status == constant.OK) {
-            ui.workingHours = response.workingHours;
-            ui.lateToCheckIn = response.lateToCheckIn;
-            ui.bestCheckIn = response.bestCheckIn;
+                    // set check status
+                    ui.currentUser.checkStatus=constant.CHECK_IN;
+                    localStorage.setItem('user', JSON.stringify(ui.currentUser));
+                    ui.statusabsen = ui.currentUser.checkStatus;
 
-        }
-    });
+                    var clock = new Date(),
+                        username = ui.currentUser.username,
+                        message = 'Good morning '+username;
+                    if(clock.getHours() >= 11) {
+                        message = 'Hello '+username;
+                    }
+
+                    callGetLastInfoCheckin();
+
+                    $ionicPopup.alert({
+                        title: 'Success to check in',
+                        cssClass: 'success',
+                        template: message+'. Keep spirit for today :)'
+                    });
+                }
+                else {
+                    $ionicLoading.hide();
+                    $ionicPopup.alert({
+                        title: 'Failed to check in',
+                        template: response.error
+                    });
+                }
+            }).catch(function (error) {
+            ui.showInternalError();
+        })
+    }
 
     $ionicPlatform.ready(function() {
 
         // Check in
         ui.doScan = function () {
 
-            if(ui.currentUser.checkStatus == constant.YES || ui.currentUser.checkStatus == constant.CHECK_OUT) {
-
-                $ionicPopup.alert({
-                    title: 'Failed to check in',
-                    template: 'You have checked out for today, please do check in again for tomorrow'
-                });
-
-            } else {
-
-                $cordovaBarcodeScanner.scan()
-                    .then(function (barcodeData) {
-                        // Success! Barcode data is here
-                        if (barcodeData.text) {
-                            ui.absenLoading();
-                            var param = {
-                                username: ui.currentUser.username,
-                                checkin: barcodeData.text,
-                                versionApp: constant.VERSION_APP
-                            }
-                            HomeService.checkin(param)
-                                .then(function (response) {
-                                    if (response.status == constant.OK) {
-                                        $ionicLoading.hide();
-                                        ui.loadRecent();
-
-                                        // set check status
-                                        ui.currentUser.checkStatus=constant.CHECK_IN;
-                                        localStorage.setItem('user', JSON.stringify(ui.currentUser));
-                                        ui.statusabsen = ui.currentUser.checkStatus;
-
-                                        var clock = new Date(),
-                                            username = ui.currentUser.username,
-                                            message = 'Good morning '+username;
-                                        if(clock.getHours() >= 11) {
-                                            message = 'Hello '+username;
-                                        }
-
-                                        $ionicPopup.alert({
-                                            title: 'Success to check in',
-                                            cssClass: 'success',
-                                            template: message+'. Keep spirit for today :)'
-                                        });
-                                    }
-                                    else if (response.data.status == constant.REQUIRED_UPDATE) {
-                                        $ionicLoading.hide();
-                                        $ionicPopup.confirm({
-                                            title: 'Required Update',
-                                            template: response.data.message,
-                                            buttons: [{
-                                                text: 'Update Now',
-                                                onTap: function (e) {
-                                                    window.open('http://bit.ly/update-absen', '_system', 'location=yes'); return false;
-                                                }
-                                            }]
-                                        });
-                                    }
-                                    else {
-                                        $ionicLoading.hide();
-                                        $ionicPopup.alert({
-                                            title: 'Failed to check in',
-                                            template: response.error
-                                        });
-                                    }
-                                }).catch(function (error) {
-                                ui.showInternalError();
-                                })
-                        }
-                    }).catch(function (error) {
+            $cordovaBarcodeScanner.scan()
+                .then(function (barcodeData) {
+                    // Success! Barcode data is here
+                    if (barcodeData.text) {
+                        ui.absenLoading();
+                        checkin(barcodeData.text);
+                    }
+                }).catch(function (error) {
                     ui.showInternalError();
-                    })
-            }
+                })
         }
 
         // Check out
