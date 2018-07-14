@@ -1,11 +1,11 @@
-<<<<<<< HEAD
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
 node_modules/
 platforms/
 plugins/
-=======
+.idea/
+
 # Logs
 logs
 *.log
@@ -65,4 +65,4 @@ typings/
 # dotenv environment variables file
 .env
 
->>>>>>> 7d32d9b2bb369ccc2a333a98c05494f9d4f55139
+.gitignore
